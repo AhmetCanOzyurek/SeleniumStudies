@@ -5,16 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b77ea066-6ef9-4a06-a2f4-41ab9ed3a9ec" name="Changes" comment="DriverStuides and FirstTest">
-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/day01_driverMethodları/C04_manageMEthodları.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/day01_driverMethodları/C05_driverNavigateMethodları.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/day02_Locaters/C01_DriverMethodları.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/day02_Locaters/C02_FindElements.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/day02_Locaters/C03_findElements.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/day02_Locaters/C04_linkTextpartialLinkTex.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/day02_Locaters/C05_isEnable.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/day02_Locaters/C06_Xpath.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/day02_Locaters/C07_XpathSoru2.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/day03_JUni/C01_xPathTextKullanimi.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
     </list>
@@ -52,9 +42,54 @@
     &quot;git-widget-placeholder&quot;: &quot;master&quot;
   }
 }</component>
-  <component name="RunManager" selected="Application.C02_RelativeLocators">
-    <configuration name="C01_xPathTextKullanimi" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="tests.day03_JUni.C01_xPathTextKullanimi" />
+  <component name="RunManager" selected="JUnit.C02_Assertions">
+    <configuration name="C01_Assertions" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="com.unityverse_Selenium" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="tests.Day04_JunitFrameWork_DropDown.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="tests.Day04_JunitFrameWork_DropDown" />
+      <option name="MAIN_CLASS_NAME" value="tests.Day04_JunitFrameWork_DropDown.C01_Assertions" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="C01_Assertions.karsılastimaTesti" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="com.unityverse_Selenium" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="tests.Day04_JunitFrameWork_DropDown.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="tests.Day04_JunitFrameWork_DropDown" />
+      <option name="MAIN_CLASS_NAME" value="tests.Day04_JunitFrameWork_DropDown.C01_Assertions" />
+      <option name="METHOD_NAME" value="karsılastimaTesti" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="C02_Assertions" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="com.unityverse_Selenium" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="tests.Day04_JunitFrameWork_DropDown.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="tests.Day04_JunitFrameWork_DropDown" />
+      <option name="MAIN_CLASS_NAME" value="tests.Day04_JunitFrameWork_DropDown.C02_Assertions" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="C07_BeforeClass_AfterClass" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="com.unityverse_Selenium" />
       <extension name="coverage">
         <pattern>
@@ -62,12 +97,14 @@
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
+      <option name="PACKAGE_NAME" value="tests.day03_JUni" />
+      <option name="MAIN_CLASS_NAME" value="tests.day03_JUni.C07_BeforeClass_AfterClass" />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="C02_RelativeLocators" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="tests.day03_JUni.C02_RelativeLocators" />
+    <configuration name="C07_BeforeClass_AfterClass.test02" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="com.unityverse_Selenium" />
       <extension name="coverage">
         <pattern>
@@ -75,56 +112,21 @@
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="C05_isEnable" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="tests.day02_Locaters.C05_isEnable" />
-      <module name="com.unityverse_Selenium" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="tests.day02_Locaters.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="C06_Xpath" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="tests.day02_Locaters.C06_Xpath" />
-      <module name="com.unityverse_Selenium" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="tests.day02_Locaters.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="C07_XpathSoru2" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="tests.day02_Locaters.C07_XpathSoru2" />
-      <module name="com.unityverse_Selenium" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="tests.day02_Locaters.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
+      <option name="PACKAGE_NAME" value="tests.day03_JUni" />
+      <option name="MAIN_CLASS_NAME" value="tests.day03_JUni.C07_BeforeClass_AfterClass" />
+      <option name="METHOD_NAME" value="test02" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.C02_RelativeLocators" />
-        <item itemvalue="Application.C01_xPathTextKullanimi" />
-        <item itemvalue="Application.C07_XpathSoru2" />
-        <item itemvalue="Application.C06_Xpath" />
-        <item itemvalue="Application.C05_isEnable" />
+        <item itemvalue="JUnit.C02_Assertions" />
+        <item itemvalue="JUnit.C01_Assertions" />
+        <item itemvalue="JUnit.C01_Assertions.karsılastimaTesti" />
+        <item itemvalue="JUnit.C07_BeforeClass_AfterClass" />
+        <item itemvalue="JUnit.C07_BeforeClass_AfterClass.test02" />
       </list>
     </recent_temporary>
   </component>
