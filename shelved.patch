@@ -1,0 +1,675 @@
+Subject: [PATCH] shelved
+---
+Index: src/test/java/tests/day07_Waits_Webtables/C04_Cookies.java
+===================================================================
+diff --git a/src/test/java/tests/day07_Waits_Webtables/C04_Cookies.java b/src/test/java/tests/day07_Waits_Webtables/C04_Cookies.java
+new file mode 100644
+--- /dev/null	
++++ b/src/test/java/tests/day07_Waits_Webtables/C04_Cookies.java	
+@@ -0,0 +1,80 @@
++package tests.day07_Waits_Webtables;
++
++
++import org.junit.Assert;
++import org.junit.Test;
++import org.junit.experimental.theories.suppliers.TestedOn;
++import org.openqa.selenium.Cookie;
++import tests.utilities.TestBase;
++
++import java.util.Set;
++
++public class C04_Cookies extends TestBase{
++    @Test
++    public void CookieTesti(){
++    //   1- Amazon anasayfaya gidin
++        driver.get("https:amazon.com");
++    //   2- tum cookie’leri listeleyin
++       Set<Cookie> cookies =  driver.manage().getCookies();
++
++        int cookieSirasi = 1;
++        for (Cookie each: cookies
++             ) {
++            System.out.println(cookieSirasi + "-"+each);
++            cookieSirasi++;
++        }
++    //   3- Sayfadaki cookies sayisinin 5’den buyuk oldugunu test edin
++        int expectedMinSize = 5;
++        int actualSize = cookies.size();
++        Assert.assertTrue(actualSize>expectedMinSize);
++    //   4- ismi i18n-prefs olan cookie degerinin USD oldugunu test edin
++        String expectedCookieDegeri = "USD";
++        String actualCookieValue = driver.manage().getCookieNamed("i18n-prefs").getValue();
++        Assert.assertEquals(expectedCookieDegeri,actualCookieValue);
++    //   5- ismi “en sevdigim cookie” ve degeri “cikolatali” olan bir cookie olusturun ve sayfaya ekleyin
++        Cookie cookie = new Cookie("EnSevdigimCookie","cikolatali");
++        driver.manage().addCookie(cookie);
++        System.out.println("===============");
++        cookies =  driver.manage().getCookies();
++
++         cookieSirasi = 1;
++        for (Cookie each: cookies
++        ) {
++            System.out.println(cookieSirasi + "-"+each);
++            cookieSirasi++;
++        }
++    //   6- eklediginiz cookie’nin sayfaya eklendigini test edin
++         expectedCookieDegeri = "cikolatali";
++         actualCookieValue = driver.manage().getCookieNamed("EnSevdigimCookie").getValue();
++        Assert.assertEquals(expectedCookieDegeri,actualCookieValue);
++    //   7- ismi skin olan cookie’yi silin ve silindigini test edin
++        driver.manage().deleteCookieNamed("skin");
++        System.out.println("===============");
++        cookies =  driver.manage().getCookies();
++
++        cookieSirasi = 1;
++        for (Cookie each: cookies
++        ) {
++            System.out.println(cookieSirasi + "-"+each);
++            cookieSirasi++;
++        }
++
++        boolean flag = true;
++        for (Cookie each: cookies
++             ) {
++            if (each.getName().equals("skin")) flag = false;
++        }
++        Assert.assertTrue(flag);
++    //   8- tum cookie’leri silin ve silindigini test edin
++        driver.manage().deleteAllCookies();
++        cookies =  driver.manage().getCookies();
++        System.out.println("===============");
++
++        System.out.println("silindikten sonra cookiesSeti " + cookies);
++        int expectedCookieSetSize = 0;
++        int actualCookieSetSize = cookies.size();
++      Assert.assertEquals(actualCookieSetSize,expectedCookieSetSize);
++
++    }
++
++}
+Index: src/test/java/tests/day07_Waits_Webtables/C05_WebTables.java
+===================================================================
+diff --git a/src/test/java/tests/day07_Waits_Webtables/C05_WebTables.java b/src/test/java/tests/day07_Waits_Webtables/C05_WebTables.java
+new file mode 100644
+--- /dev/null	
++++ b/src/test/java/tests/day07_Waits_Webtables/C05_WebTables.java	
+@@ -0,0 +1,57 @@
++package tests.day07_Waits_Webtables;
++
++import org.checkerframework.framework.qual.DefaultQualifier;
++import org.junit.Assert;
++import org.junit.Test;
++import org.openqa.selenium.By;
++import org.openqa.selenium.Keys;
++import org.openqa.selenium.WebElement;
++import org.openqa.selenium.interactions.Actions;
++import tests.utilities.TestBase;
++import java.util.List;
++import java.nio.file.WatchEvent;
++
++public class C05_WebTables  extends TestBase {
++
++    @Test
++    public void amazonWebTableTesti() throws InterruptedException {
++      //1."https://www.amazon.com" adresine gidin
++        driver.get("https://www.amazon.com");
++      //2.Sayfanin en altina inin
++        Actions actions = new Actions(driver);
++        actions.sendKeys(Keys.END).perform();
++      Thread.sleep(1000);
++        //3.Web table tum body’sini yazdirin
++        WebElement wholeTableBody = driver.findElement(By.xpath("//tbody"));
++        System.out.println(wholeTableBody.getText());
++        //4.Web table’daki satir sayisinin 7 oldugunu test edin
++        List<WebElement> satirElementleriListesi = driver.findElements(By.xpath("//tbody/tr"));
++        int expectedRow = 7;
++        int actualRow = satirElementleriListesi.size();
++        Assert.assertEquals(actualRow,expectedRow);
++      //5.Tum satirlari yazdirin
++        System.out.println("=============");
++        for (int i = 0; i <satirElementleriListesi.size() ; i++) {
++            System.out.println(i+1 + ".satir    :    " + satirElementleriListesi.get(i).getText());
++        }
++      //6. Web table’daki sutun sayisinin 13 olduğunu test edin
++        List<WebElement> birinciSatirDatalarListesi = driver.findElements(By.xpath("//tbody/tr[1]/td"));
++        int expectedColon = 13;
++        int actualColon = birinciSatirDatalarListesi.size();
++        Assert.assertEquals(expectedColon,actualColon);
++      //7. 5.sutunu yazdirin
++        List<WebElement> ColonListesi5colon = driver.findElements(By.xpath("//tbody/tr/td[5]"));
++        System.out.println("============5.Sutun==========");
++        for (WebElement each:
++                ColonListesi5colon) {
++            System.out.println(each.getText());
++        }
++      //8.Satir ve sutun sayisini parametre olarak alip, hucredeki bilgiyi döndüren bir method olusturun
++        System.out.println(hucredekiBilgi(1,2));
++    }
++    public String hucredekiBilgi(int satirSayisi, int sutunSayisi){
++        String dinamikXPath = "//tbody/tr["+satirSayisi+"]/td["+sutunSayisi+"]";
++        WebElement satirSutunSayisi = driver.findElement(By.xpath(dinamikXPath));
++        return satirSutunSayisi.getText();
++    }
++}
+Index: src/test/java/tests/day07_Waits_Webtables/C02_ExplicitlyWai.java
+===================================================================
+diff --git a/src/test/java/tests/day07_Waits_Webtables/C02_ExplicitlyWai.java b/src/test/java/tests/day07_Waits_Webtables/C02_ExplicitlyWai.java
+new file mode 100644
+--- /dev/null	
++++ b/src/test/java/tests/day07_Waits_Webtables/C02_ExplicitlyWai.java	
+@@ -0,0 +1,60 @@
++package tests.day07_Waits_Webtables;
++
++import io.github.bonigarcia.wdm.WebDriverManager;
++import org.junit.Assert;
++import org.junit.Test;
++import org.openqa.selenium.By;
++import org.openqa.selenium.WebDriver;
++import org.openqa.selenium.WebElement;
++import org.openqa.selenium.chrome.ChromeDriver;
++import org.openqa.selenium.support.ui.ExpectedConditions;
++import org.openqa.selenium.support.ui.WebDriverWait;
++
++import java.time.Duration;
++
++public class C02_ExplicitlyWai {
++@Test
++    public void implicitlyWaitTesti(){
++    //1. Test Base kullanmadan ayarlari yapin
++    WebDriverManager.chromedriver().setup();
++    WebDriver driver = new ChromeDriver();
++    driver.manage().window().maximize();
++    driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
++    //2. https://the-internet.herokuapp.com/dynamic_controls adresine gidin.
++    driver.get("https://the-internet.herokuapp.com/dynamic_controls");
++    //3. Remove butonuna tıklayın ve it's gone! yazisi cikincaya kadar bekleyin
++    driver.findElement(By.xpath("//*[text()='Remove']")).click();
++    //4. “It’s gone!” mesajinin goruntulendigini dogrulayın.
++    WebElement itsGone = driver.findElement(By.xpath("//p[@id='message']"));
++    Assert.assertTrue(itsGone.isDisplayed());
++    //5. Add butonuna tıklayın ve it's back! yazisi cikincaya kadar bekleyin
++    driver.findElement(By.xpath("//*[text()='Add']")).click();
++    //6. “It’s back!” mesajinin goruntulendigini dogrulayın.
++    WebElement itsBack = driver.findElement(By.xpath("//p[@id='message']"));
++    Assert.assertTrue(itsBack.isDisplayed());
++
++}
++@Test
++    public void explicitlyWait(){
++    WebDriverManager.chromedriver().setup();
++    WebDriver driver = new ChromeDriver();
++    driver.manage().window().maximize();
++    driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(1));
++// 2 explicitliyWait ile asagidaki bekleme islemlerini gerceklestirin
++// 2. https://the-internet.herokuapp.com/dynamic_controls adresine gidin.
++  driver.get("https://the-internet.herokuapp.com/dynamic_controls");
++    //3. Remove butonuna tıklayın ve it's gone! yazisi cikincaya kadar bekleyin
++    driver.findElement(By.xpath("//*[text()='Remove']")).click();
++    //4. “It’s gone!” mesajinin goruntulendigini dogrulayın.
++    WebDriverWait wait  = new WebDriverWait(driver,Duration.ofSeconds(40));
++    WebElement itsGoneElementi = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[text()='Remove']")));
++    Assert.assertTrue(itsGoneElementi.isDisplayed());
++    //5. Add butonuna tıklayın ve it's back! yazisi cikincaya kadar bekleyin
++
++    WebElement add = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[text()='Add']")));
++    add.click();
++    WebElement itsBackElementi =wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//p[@id='message']")));
++    Assert.assertTrue(itsBackElementi.isDisplayed());
++}
++
++}
+Index: src/test/java/tests/day07_Waits_Webtables/C03_ExplicitlyWait.java
+===================================================================
+diff --git a/src/test/java/tests/day07_Waits_Webtables/C03_ExplicitlyWait.java b/src/test/java/tests/day07_Waits_Webtables/C03_ExplicitlyWait.java
+new file mode 100644
+--- /dev/null	
++++ b/src/test/java/tests/day07_Waits_Webtables/C03_ExplicitlyWait.java	
+@@ -0,0 +1,48 @@
++package tests.day07_Waits_Webtables;
++
++import io.github.bonigarcia.wdm.WebDriverManager;
++import org.junit.Assert;
++import org.junit.Test;
++import org.openqa.selenium.By;
++import org.openqa.selenium.WebDriver;
++import org.openqa.selenium.WebElement;
++import org.openqa.selenium.chrome.ChromeDriver;
++import org.openqa.selenium.support.ui.ExpectedConditions;
++import org.openqa.selenium.support.ui.WebDriverWait;
++import tests.utilities.TestBase;
++
++import java.time.Duration;
++
++public class C03_ExplicitlyWait {
++
++        @Test
++        public void isEnabled(){
++            WebDriverManager.chromedriver().setup();
++            WebDriver  driver = new ChromeDriver();
++            driver.manage().window().maximize();
++            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(1));
++
++
++            //    2. Bir metod olusturun : isEnabled()
++//3. https://the-internet.herokuapp.com/dynamic_controls adresine gidin.//*[text()='Enable']
++            driver.get("https://the-internet.herokuapp.com/dynamic_controls");
++//            4. Textbox’in etkin olmadigini(enabled) dogrulayın
++            WebElement textBox = driver.findElement(By.xpath("//input[@type='text']"));
++            driver.findElement(By.xpath("//*[text()='Enable']")).click();
++            WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(40));
++            wait.until(ExpectedConditions.elementToBeClickable(textBox));
++            Assert.assertTrue(textBox.isEnabled());
++
++//5. Enable butonuna tıklayın ve textbox etkin oluncaya kadar bekleyin
++
++
++//6. “It’s enabled!” mesajinin goruntulendigini dogrulayın.
++            WebElement itsEnabled = driver.findElement(By.xpath("//p[@id='message']"));
++            Assert.assertTrue(itsEnabled.isDisplayed());
++//7. Textbox’in etkin oldugunu(enabled) dogrulayın.
++            Assert.assertTrue(textBox.isEnabled());
++
++
++
++        }
++}
+Index: src/test/java/tests/day07_Waits_Webtables/C01_ImpilicitlyWait.java
+===================================================================
+diff --git a/src/test/java/tests/day07_Waits_Webtables/C01_ImpilicitlyWait.java b/src/test/java/tests/day07_Waits_Webtables/C01_ImpilicitlyWait.java
+new file mode 100644
+--- /dev/null	
++++ b/src/test/java/tests/day07_Waits_Webtables/C01_ImpilicitlyWait.java	
+@@ -0,0 +1,28 @@
++package tests.day07_Waits_Webtables;
++
++import org.junit.Assert;
++import org.junit.Test;
++import org.openqa.selenium.By;
++import org.openqa.selenium.WebElement;
++import tests.utilities.TestBase;
++
++public class C01_ImpilicitlyWait extends TestBase {
++    @Test
++    public void isEnabled(){
++        //    2. Bir metod olusturun : isEnabled()
++//3. https://the-internet.herokuapp.com/dynamic_controls adresine gidin.//*[text()='Enable']
++driver.get("https://the-internet.herokuapp.com/dynamic_controls");
++//            4. Textbox’in etkin olmadigini(enabled) dogrulayın
++        WebElement textBox = driver.findElement(By.xpath("//input[@type='text']"));
++        Assert.assertFalse(textBox.isEnabled());
++//5. Enable butonuna tıklayın ve textbox etkin oluncaya kadar bekleyin
++driver.findElement(By.xpath("//*[text()='Enable']")).click();
++
++//6. “It’s enabled!” mesajinin goruntulendigini dogrulayın.
++WebElement itsEnabled = driver.findElement(By.xpath("//p[@id='message']"));
++Assert.assertTrue(itsEnabled.isDisplayed());
++//7. Textbox’in etkin oldugunu(enabled) dogrulayın.
++        Assert.assertTrue(textBox.isEnabled());
++    }
++
++}
+Index: src/test/java/tests/day06_actionsClass_FileTestleri/C04_keyboardActions.java
+===================================================================
+diff --git a/src/test/java/tests/day06_actionsClass_FileTestleri/C04_keyboardActions.java b/src/test/java/tests/day06_actionsClass_FileTestleri/C04_keyboardActions.java
+new file mode 100644
+--- /dev/null	
++++ b/src/test/java/tests/day06_actionsClass_FileTestleri/C04_keyboardActions.java	
+@@ -0,0 +1,40 @@
++package tests.day06_actionsClass_FileTestleri;
++
++import net.bytebuddy.implementation.bytecode.ShiftLeft;
++import org.junit.Assert;
++import org.junit.Test;
++import org.openqa.selenium.By;
++import org.openqa.selenium.Keys;
++import org.openqa.selenium.WebElement;
++import org.openqa.selenium.interactions.Actions;
++import tests.utilities.TestBase;
++
++import java.time.format.DateTimeFormatter;
++
++public class C04_keyboardActions extends TestBase {
++
++    @Test
++    public void tset01(){
++        //1- Bir Class olusturalim KeyboardActions1
++//2- https://www.amazon.com sayfasina gidelim
++        driver.get("https://www.amazon.com");
++//3- Arama kutusuna actions method’larini kullanarak Samsung A71 yazdirin ve Enter’a basarak arama yaptirin
++        WebElement aramaKutusu = driver.findElement(By.id("twotabsearchtextbox"));
++        Actions actions = new Actions(driver);
++        actions.click(aramaKutusu)
++                .keyDown(Keys.SHIFT)
++                .sendKeys("s")
++                .keyUp(Keys.SHIFT)
++                .sendKeys("amsung ")
++                .keyDown(Keys.SHIFT)
++                .sendKeys("a")
++                .keyUp(Keys.SHIFT)
++                .sendKeys("71" + Keys.ENTER).perform();
++//4- aramanin gerceklestigini test edin
++        WebElement sonucElementi = driver.findElement(By.xpath("//div[@class='a-section a-spacing-small a-spacing-top-small']"));
++        String expectedIcerik = "Samsung A71";
++        String actualIcerik = sonucElementi.getText();
++
++        Assert.assertTrue(actualIcerik.contains(expectedIcerik));
++    }
++}
+Index: src/test/java/tests/Day04_JunitFrameWork_DropDown/C07_TestBaseKullanimiz.java
+===================================================================
+diff --git a/src/test/java/tests/Day04_JunitFrameWork_DropDown/C07_TestBaseKullanimiz.java b/src/test/java/tests/Day04_JunitFrameWork_DropDown/C07_TestBaseKullanimiz.java
+new file mode 100644
+--- /dev/null	
++++ b/src/test/java/tests/Day04_JunitFrameWork_DropDown/C07_TestBaseKullanimiz.java	
+@@ -0,0 +1,38 @@
++package tests.Day04_JunitFrameWork_DropDown;
++
++import org.junit.Assert;
++import org.junit.Test;
++import org.openqa.selenium.By;
++import org.openqa.selenium.Keys;
++import org.openqa.selenium.WebElement;
++import tests.utilities.TestBase;
++
++public class C07_TestBaseKullanimiz  extends TestBase{
++
++    /*
++
++    extends keyword
++    icinde oldugumu C07 class'ini
++    TestBase class'inin child class'i yapar
++bu sayede C07 class'indan TestBase class'indaki
++tum variable ve method'lari DIREKT kullanabiliriz
++(static keyword'e dikkat etmek gerekir)
++     */
++@Test
++    public void amazonTest(){
++
++    // Amazon anasayfaya gidin
++    driver.get("https:amazon.com");
++
++
++    //Nutella icin arama yapin
++    WebElement aramaKutusu = driver.findElement(By.id("twotabsearchtextbox"));
++    aramaKutusu.sendKeys("nutella"+ Keys.ENTER);
++
++    //Arama sonuclarinin Nutlella icerdigini test edin
++WebElement nutellaArmasonucu = driver.findElement(By.xpath("//*[@class='a-section a-spacing-small a-spacing-top-small']"));
++String actualSonucYazisi = nutellaArmasonucu.getText();
++String expectedIcerik = "nutella";
++    Assert.assertTrue(actualSonucYazisi.contains(expectedIcerik));
++}
++}
+Index: src/test/java/tests/day06_actionsClass_FileTestleri/C05_facebookKayitTesti.java
+===================================================================
+diff --git a/src/test/java/tests/day06_actionsClass_FileTestleri/C05_facebookKayitTesti.java b/src/test/java/tests/day06_actionsClass_FileTestleri/C05_facebookKayitTesti.java
+new file mode 100644
+--- /dev/null	
++++ b/src/test/java/tests/day06_actionsClass_FileTestleri/C05_facebookKayitTesti.java	
+@@ -0,0 +1,52 @@
++package tests.day06_actionsClass_FileTestleri;
++
++import com.github.javafaker.Faker;
++import org.junit.AfterClass;
++import org.junit.Test;
++import org.openqa.selenium.By;
++import org.openqa.selenium.Keys;
++import org.openqa.selenium.WebElement;
++import org.openqa.selenium.interactions.Actions;
++import tests.utilities.TestBase;
++
++import java.security.Key;
++
++public class C05_facebookKayitTesti extends TestBase {
++    @Test
++    public void test01() throws InterruptedException {
++       //1- https://www.facebook.com adresine gidelim
++        driver.get("https://www.facebook.com");
++       //2- Cookies kabul edin
++       //3- Yeni hesap olustur butonuna basalim
++        driver.findElement(By.xpath("//*[@*='open-registration-form-button']")).click();
++       //4- Ad, soyad, mail ve sifre kutularina deger yazalim ve kaydol tusuna basalim
++        WebElement adınKutusu = driver.findElement(By.xpath("//*[@placeholder='Adın']"));
++        Actions actions = new Actions(driver);
++        Faker faker = new Faker();
++        String emailAdresi = faker.internet().emailAddress();
++        actions.click(adınKutusu)
++                .sendKeys(faker.name().firstName())
++                .sendKeys(Keys.TAB)
++                .sendKeys(faker.name().lastName())
++                .sendKeys(Keys.TAB)
++                .sendKeys(emailAdresi)
++                .sendKeys(Keys.TAB)
++                .sendKeys(emailAdresi)
++                .sendKeys(Keys.TAB)
++                .sendKeys(faker.internet().password())
++                .sendKeys(Keys.TAB)
++                .sendKeys(Keys.TAB)
++                .sendKeys("23")
++                .sendKeys(Keys.TAB)
++                .sendKeys("haz")
++                .sendKeys(Keys.TAB)
++                .sendKeys("2000")
++                .sendKeys(Keys.TAB).sendKeys(Keys.TAB).sendKeys(Keys.ARROW_RIGHT).perform();
++        Thread.sleep(7000);
++
++        //5- Kaydol tusuna basalim
++driver.findElement(By.xpath("//button[@name='websubmit']")).click();
++
++    }
++
++}
+Index: src/test/java/tests/day06_actionsClass_FileTestleri/C07_dosyaErisim.java
+===================================================================
+diff --git a/src/test/java/tests/day06_actionsClass_FileTestleri/C07_dosyaErisim.java b/src/test/java/tests/day06_actionsClass_FileTestleri/C07_dosyaErisim.java
+new file mode 100644
+--- /dev/null	
++++ b/src/test/java/tests/day06_actionsClass_FileTestleri/C07_dosyaErisim.java	
+@@ -0,0 +1,38 @@
++package tests.day06_actionsClass_FileTestleri;
++
++import com.sun.source.tree.SynchronizedTree;
++import org.junit.Test;
++
++public class C07_dosyaErisim {
++    @Test
++    public void dosyaTesti01(){
++        System.out.println(System.getProperty("user.home "));
++
++        /*
++        Selenium bilgisayarimiza ulasamaz  ve
++        bilgisayarimizdaki dosyalari test edemez
++
++        bilgisayarimizdaki dsyalarla ilgili islemler icin java'dan yardim alabiliriz
++
++        Javva'nin bilgisayarimizdaki bir dosyaya ulasabilmesi icin ise
++        dosya yoluna ihtiyaci vardir
++
++        Testimiz birden fazla bilgisayarda calisacaksa
++        her bilgisayarin dosya yapisi farkli olacağından
++        dosya testleri hata verebilir
++
++        bu hatlarin onuna gecmek icin
++        dosya yollarimizi dinamik yapmayi tercih ederiz
++
++        dosya yolunu 2 parcaya ayiralim
++        1- sadece benş bilgisayarima ozel kisim
++        2 - varsa onedrive kismi
++        3 - herkeste olan ortak kisim
++
++        /Users/enesoncu   Onedrive    /Masaüstü/sample.png
++
++         */
++
++        String  dinamikDosyaYolu = System.getProperty("user.home") + "OneDrive" + "/Masaüstü/sample.png";
++    }
++}
+Index: src/test/java/tests/day06_actionsClass_FileTestleri/C06_keyboardActions.java
+===================================================================
+diff --git a/src/test/java/tests/day06_actionsClass_FileTestleri/C06_keyboardActions.java b/src/test/java/tests/day06_actionsClass_FileTestleri/C06_keyboardActions.java
+new file mode 100644
+--- /dev/null	
++++ b/src/test/java/tests/day06_actionsClass_FileTestleri/C06_keyboardActions.java	
+@@ -0,0 +1,34 @@
++package tests.day06_actionsClass_FileTestleri;
++
++import org.junit.Assert;
++import org.junit.Test;
++import org.openqa.selenium.By;
++import org.openqa.selenium.Keys;
++import org.openqa.selenium.WebElement;
++import org.openqa.selenium.devtools.v85.network.model.DataReceived;
++import org.openqa.selenium.interactions.Actions;
++import tests.utilities.TestBase;
++
++public class C06_keyboardActions extends TestBase {
++
++    @Test
++    public void test01() throws InterruptedException {
++      // 2- https://html.com/tags/iframe/ sayfasina gidelim
++        driver.get("https://html.com/tags/iframe/");
++      // 3- video’yu gorecek kadar asagi inin
++        Thread.sleep(1000);
++        Actions actions = new Actions(driver);
++        actions.sendKeys(Keys.PAGE_DOWN).perform();
++        Thread.sleep(1000);
++      // 4- videoyu izlemek icin Play tusuna basin
++        WebElement iframeVideo = driver.findElement(By.xpath("//iframe[@src='https://www.youtube.com/embed/owsfdh4gxyc']"));
++        driver.switchTo().frame(iframeVideo);
++        Thread.sleep(1000);
++        driver.findElement(By.xpath("//button[@aria-label='Oynat']")).click();
++        // 5- videoyu calistirdiginizi test edinü
++        Thread.sleep(1000);
++        WebElement playButAfterPlay = driver.findElement(By.xpath("//*[@data-sessionlink='feature=player-button']"));
++        Assert.assertTrue(playButAfterPlay.isDisplayed());
++        Thread.sleep(1000);
++    }
++}
+Index: src/test/java/tests/day06_actionsClass_FileTestleri/C09_FileUploadTesti.java
+===================================================================
+diff --git a/src/test/java/tests/day06_actionsClass_FileTestleri/C09_FileUploadTesti.java b/src/test/java/tests/day06_actionsClass_FileTestleri/C09_FileUploadTesti.java
+new file mode 100644
+--- /dev/null	
++++ b/src/test/java/tests/day06_actionsClass_FileTestleri/C09_FileUploadTesti.java	
+@@ -0,0 +1,35 @@
++package tests.day06_actionsClass_FileTestleri;
++
++import org.junit.Test;
++import tests.utilities.TestBase;
++
++public class C09_FileUploadTesti extends TestBase{
++
++        @Test
++        public void fileUploadTEsti() throws InterruptedException {
++            //https://the-internet.herokuapp.com/upload adresine gidelim
++            driver.get("https://the-internet.herokuapp.com/upload ");
++            //chooseFile butonuna basalim
++            System.out.println(System.getProperty("user.home"));
++            //  //bilgisayardaki kullanici ana dosyanin dosya yolu : /Users/enesoncu
++            System.out.println(System.getProperty("user.dir"));
++            //Users/enesoncu/IdeaProjects/com.unityverse_Selenium
++            //Users/enesoncu/IdeaProjects/com.unityverse_Selenium/src/test/java/tests/deneme.txt ------> absolute path
++            // //tests/deneme.txt
++            String dinamikDosyaYolu = System.getProperty("user.dir")+"/src/test/java/tests/deneme.txt";
++            // //Yuklemek istediginiz dosyayi secelim.
++            //  WebElement fileUploadButonu = driver.findElement(By.id("file-upload"));
++            //  fileUploadButonu.sendKeys(dinamikDosyaYolu);
++            // //Upload butonuna basalim.
++            //  driver.findElement(By.id("file-submit")).click();
++            // //“File Uploaded!” textinin goruntulendigini test edelim.
++            //  WebElement fileUpload = driver.findElement(By.xpath("//*[text()='File Uploaded!']"));
++            //  Assert.assertTrue(fileUpload.isDisplayed());
++//
++            Thread.sleep(8000);
++        }
++    }
++
++
++
++
+Index: src/test/java/tests/day06_actionsClass_FileTestleri/C08_DosyaIndirmeTesti.java
+===================================================================
+diff --git a/src/test/java/tests/day06_actionsClass_FileTestleri/C08_DosyaIndirmeTesti.java b/src/test/java/tests/day06_actionsClass_FileTestleri/C08_DosyaIndirmeTesti.java
+new file mode 100644
+--- /dev/null	
++++ b/src/test/java/tests/day06_actionsClass_FileTestleri/C08_DosyaIndirmeTesti.java	
+@@ -0,0 +1,24 @@
++package tests.day06_actionsClass_FileTestleri;
++
++import org.junit.Assert;
++import org.junit.Test;
++import org.openqa.selenium.By;
++import tests.utilities.TestBase;
++
++import java.nio.file.Files;
++import java.nio.file.Paths;
++
++public class C08_DosyaIndirmeTesti extends TestBase {
++    @Test
++    public void dosyaIndirmeTesti() throws InterruptedException {
++        //2. https://the-internet.herokuapp.com/download adresine gidelim.
++        driver.get("https://the-internet.herokuapp.com/download ");
++        //3. sample.png dosyasını indirelim
++        Thread.sleep(2000);
++        driver.findElement(By.linkText("sample.png")).click();
++        //4. Dosyanın başarıyla indirilip indirilmediğini test edelim
++        String dinamikDosyaYolu = System.getProperty("user.home")+"/Desktop/sample.png";
++        System.out.println(dinamikDosyaYolu);
++        Assert.assertTrue(Files.exists(Paths.get(dinamikDosyaYolu)));
++    }
++}
+Index: src/test/java/tests/day08_Webtables/C01_Webtables.java
+===================================================================
+diff --git a/src/test/java/tests/day08_Webtables/C01_Webtables.java b/src/test/java/tests/day08_Webtables/C01_Webtables.java
+new file mode 100644
+--- /dev/null	
++++ b/src/test/java/tests/day08_Webtables/C01_Webtables.java	
+@@ -0,0 +1,39 @@
++package tests.day08_Webtables;
++
++import org.junit.Test;
++import org.openqa.selenium.By;
++import org.openqa.selenium.WebElement;
++import tests.utilities.TestBase;
++import java.util.List;
++public class C01_Webtables extends TestBase {
++    @Test
++    public void webtable(){
++      // 1. “https://demoqa.com/webtables” sayfasina gidin
++        driver.get("https://demoqa.com/webtables");
++      // 2. Headers da bulunan basliklari yazdirin
++        List<WebElement>  headersList = driver.findElements(By.xpath("//*[@class='rt-tr']//*[@role='columnheader']"));
++        int headersDataRow = 1;
++        for (int i = 0; i < headersList.size(); i++) {
++            System.out.println(headersDataRow+" - "+headersList.get(i).getText());
++            headersDataRow++;
++        }
++        System.out.println("=====");
++      // 3. 3.sutunun basligini yazdirin
++        String ucuncuSutunBasligi = driver.findElement(By.xpath("//*[@class='rt-tr']//*[@role='columnheader'][3]")).getText();
++        System.out.println("3.SUTUNUN basligi   :  "+ucuncuSutunBasligi);
++      // 4. Tablodaki tum datalari yazdirin
++        List<WebElement> wholeTbody = driver.findElements(By.xpath("//*[@class='rt-tbody']//*[@role='row']//*[@class='rt-td']"));
++        headersDataRow = 1;
++        for (int i = 0; i < wholeTbody.size(); i++) {
++            System.out.println(headersDataRow + " - " + wholeTbody.get(i).getText());
++            headersDataRow++;
++            if(wholeTbody.get(i).getText().isEmpty()) break;
++        }
++      // 5. Tabloda kac tane bos olmayan cell (data) oldugunu yazdirin
++      // 6. Tablodaki satir sayisini yazdirin
++      // 7. Tablodaki sutun sayisini yazdirin
++      // 8. Tablodaki 3.kolonu yazdirin
++      // 9. Tabloda "First Name" i Kierra olan kisinin Salary'sini yazdirin
++      // 10. Page sayfasinda bir method olusturun, Test sayfasindan satir ve sutun sayisini girdigimde bana datayi yazdirsin
++    }
++}
+Index: src/test/java/tests/deneme.txt
+===================================================================
+diff --git a/src/test/java/tests/deneme.txt b/src/test/java/tests/deneme.txt
+new file mode 100644
+--- /dev/null	
++++ b/src/test/java/tests/deneme.txt	
+@@ -0,0 +1,1 @@
++java candir, Selenium Heyecandir
+\ No newline at end of file

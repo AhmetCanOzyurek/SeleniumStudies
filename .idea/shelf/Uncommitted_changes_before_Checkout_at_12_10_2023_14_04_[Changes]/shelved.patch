@@ -1,0 +1,16 @@
+Index: src/test/java/tests/utilities/TestBase.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package tests.utilities;\n\nimport io.github.bonigarcia.wdm.WebDriverManager;\nimport org.junit.After;\nimport org.junit.Before;\nimport org.openqa.selenium.WebDriver;\nimport org.openqa.selenium.chrome.ChromeDriver;\n\nimport java.time.Duration;\n\npublic class TestBase {\n   public WebDriver driver;\n    @Before\n    public void setUp(){\n        driver = new ChromeDriver();\n        WebDriverManager.chromedriver().setup();\n        driver.manage().window().maximize();\n        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));\n    }\n    @After\n    public void tearDown() throws InterruptedException {\n        Thread.sleep(3000);\n       // driver.quit();\n    }\n}\n
+===================================================================
+diff --git a/src/test/java/tests/utilities/TestBase.java b/src/test/java/tests/utilities/TestBase.java
+--- a/src/test/java/tests/utilities/TestBase.java	
++++ b/src/test/java/tests/utilities/TestBase.java	
+@@ -20,6 +20,6 @@
+     @After
+     public void tearDown() throws InterruptedException {
+         Thread.sleep(3000);
+-       // driver.quit();
++        driver.quit();
+     }
+ }
