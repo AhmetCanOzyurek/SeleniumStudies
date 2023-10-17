@@ -1,0 +1,2802 @@
+Index: src/test/java/tests/day07_Waits_Webtables/C04_Cookies.java
+===================================================================
+diff --git a/src/test/java/tests/day07_Waits_Webtables/C04_Cookies.java b/src/test/java/tests/day07_Waits_Webtables/C04_Cookies.java
+new file mode 100644
+--- /dev/null	
++++ b/src/test/java/tests/day07_Waits_Webtables/C04_Cookies.java	
+@@ -0,0 +1,80 @@
++package tests.day07_Waits_Webtables;
++
++
++import org.junit.Assert;
++import org.junit.Test;
++import org.junit.experimental.theories.suppliers.TestedOn;
++import org.openqa.selenium.Cookie;
++import tests.utilities.TestBase;
++
++import java.util.Set;
++
++public class C04_Cookies extends TestBase{
++    @Test
++    public void CookieTesti(){
++    //   1- Amazon anasayfaya gidin
++        driver.get("https:amazon.com");
++    //   2- tum cookie’leri listeleyin
++       Set<Cookie> cookies =  driver.manage().getCookies();
++
++        int cookieSirasi = 1;
++        for (Cookie each: cookies
++             ) {
++            System.out.println(cookieSirasi + "-"+each);
++            cookieSirasi++;
++        }
++    //   3- Sayfadaki cookies sayisinin 5’den buyuk oldugunu test edin
++        int expectedMinSize = 5;
++        int actualSize = cookies.size();
++        Assert.assertTrue(actualSize>expectedMinSize);
++    //   4- ismi i18n-prefs olan cookie degerinin USD oldugunu test edin
++        String expectedCookieDegeri = "USD";
++        String actualCookieValue = driver.manage().getCookieNamed("i18n-prefs").getValue();
++        Assert.assertEquals(expectedCookieDegeri,actualCookieValue);
++    //   5- ismi “en sevdigim cookie” ve degeri “cikolatali” olan bir cookie olusturun ve sayfaya ekleyin
++        Cookie cookie = new Cookie("EnSevdigimCookie","cikolatali");
++        driver.manage().addCookie(cookie);
++        System.out.println("===============");
++        cookies =  driver.manage().getCookies();
++
++         cookieSirasi = 1;
++        for (Cookie each: cookies
++        ) {
++            System.out.println(cookieSirasi + "-"+each);
++            cookieSirasi++;
++        }
++    //   6- eklediginiz cookie’nin sayfaya eklendigini test edin
++         expectedCookieDegeri = "cikolatali";
++         actualCookieValue = driver.manage().getCookieNamed("EnSevdigimCookie").getValue();
++        Assert.assertEquals(expectedCookieDegeri,actualCookieValue);
++    //   7- ismi skin olan cookie’yi silin ve silindigini test edin
++        driver.manage().deleteCookieNamed("skin");
++        System.out.println("===============");
++        cookies =  driver.manage().getCookies();
++
++        cookieSirasi = 1;
++        for (Cookie each: cookies
++        ) {
++            System.out.println(cookieSirasi + "-"+each);
++            cookieSirasi++;
++        }
++
++        boolean flag = true;
++        for (Cookie each: cookies
++             ) {
++            if (each.getName().equals("skin")) flag = false;
++        }
++        Assert.assertTrue(flag);
++    //   8- tum cookie’leri silin ve silindigini test edin
++        driver.manage().deleteAllCookies();
++        cookies =  driver.manage().getCookies();
++        System.out.println("===============");
++
++        System.out.println("silindikten sonra cookiesSeti " + cookies);
++        int expectedCookieSetSize = 0;
++        int actualCookieSetSize = cookies.size();
++      Assert.assertEquals(actualCookieSetSize,expectedCookieSetSize);
++
++    }
++
++}
+Index: src/test/java/tests/day07_Waits_Webtables/C05_WebTables.java
+===================================================================
+diff --git a/src/test/java/tests/day07_Waits_Webtables/C05_WebTables.java b/src/test/java/tests/day07_Waits_Webtables/C05_WebTables.java
+new file mode 100644
+--- /dev/null	
++++ b/src/test/java/tests/day07_Waits_Webtables/C05_WebTables.java	
+@@ -0,0 +1,57 @@
++package tests.day07_Waits_Webtables;
++
++import org.checkerframework.framework.qual.DefaultQualifier;
++import org.junit.Assert;
++import org.junit.Test;
++import org.openqa.selenium.By;
++import org.openqa.selenium.Keys;
++import org.openqa.selenium.WebElement;
++import org.openqa.selenium.interactions.Actions;
++import tests.utilities.TestBase;
++import java.util.List;
++import java.nio.file.WatchEvent;
++
++public class C05_WebTables  extends TestBase {
++
++    @Test
++    public void amazonWebTableTesti() throws InterruptedException {
++      //1."https://www.amazon.com" adresine gidin
++        driver.get("https://www.amazon.com");
++      //2.Sayfanin en altina inin
++        Actions actions = new Actions(driver);
++        actions.sendKeys(Keys.END).perform();
++      Thread.sleep(1000);
++        //3.Web table tum body’sini yazdirin
++        WebElement wholeTableBody = driver.findElement(By.xpath("//tbody"));
++        System.out.println(wholeTableBody.getText());
++        //4.Web table’daki satir sayisinin 7 oldugunu test edin
++        List<WebElement> satirElementleriListesi = driver.findElements(By.xpath("//tbody/tr"));
++        int expectedRow = 7;
++        int actualRow = satirElementleriListesi.size();
++        Assert.assertEquals(actualRow,expectedRow);
++      //5.Tum satirlari yazdirin
++        System.out.println("=============");
++        for (int i = 0; i <satirElementleriListesi.size() ; i++) {
++            System.out.println(i+1 + ".satir    :    " + satirElementleriListesi.get(i).getText());
++        }
++      //6. Web table’daki sutun sayisinin 13 olduğunu test edin
++        List<WebElement> birinciSatirDatalarListesi = driver.findElements(By.xpath("//tbody/tr[1]/td"));
++        int expectedColon = 13;
++        int actualColon = birinciSatirDatalarListesi.size();
++        Assert.assertEquals(expectedColon,actualColon);
++      //7. 5.sutunu yazdirin
++        List<WebElement> ColonListesi5colon = driver.findElements(By.xpath("//tbody/tr/td[5]"));
++        System.out.println("============5.Sutun==========");
++        for (WebElement each:
++                ColonListesi5colon) {
++            System.out.println(each.getText());
++        }
++      //8.Satir ve sutun sayisini parametre olarak alip, hucredeki bilgiyi döndüren bir method olusturun
++        System.out.println(hucredekiBilgi(1,2));
++    }
++    public String hucredekiBilgi(int satirSayisi, int sutunSayisi){
++        String dinamikXPath = "//tbody/tr["+satirSayisi+"]/td["+sutunSayisi+"]";
++        WebElement satirSutunSayisi = driver.findElement(By.xpath(dinamikXPath));
++        return satirSutunSayisi.getText();
++    }
++}
+Index: src/test/java/tests/day07_Waits_Webtables/C02_ExplicitlyWai.java
+===================================================================
+diff --git a/src/test/java/tests/day07_Waits_Webtables/C02_ExplicitlyWai.java b/src/test/java/tests/day07_Waits_Webtables/C02_ExplicitlyWai.java
+new file mode 100644
+--- /dev/null	
++++ b/src/test/java/tests/day07_Waits_Webtables/C02_ExplicitlyWai.java	
+@@ -0,0 +1,60 @@
++package tests.day07_Waits_Webtables;
++
++import io.github.bonigarcia.wdm.WebDriverManager;
++import org.junit.Assert;
++import org.junit.Test;
++import org.openqa.selenium.By;
++import org.openqa.selenium.WebDriver;
++import org.openqa.selenium.WebElement;
++import org.openqa.selenium.chrome.ChromeDriver;
++import org.openqa.selenium.support.ui.ExpectedConditions;
++import org.openqa.selenium.support.ui.WebDriverWait;
++
++import java.time.Duration;
++
++public class C02_ExplicitlyWai {
++@Test
++    public void implicitlyWaitTesti(){
++    //1. Test Base kullanmadan ayarlari yapin
++    WebDriverManager.chromedriver().setup();
++    WebDriver driver = new ChromeDriver();
++    driver.manage().window().maximize();
++    driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
++    //2. https://the-internet.herokuapp.com/dynamic_controls adresine gidin.
++    driver.get("https://the-internet.herokuapp.com/dynamic_controls");
++    //3. Remove butonuna tıklayın ve it's gone! yazisi cikincaya kadar bekleyin
++    driver.findElement(By.xpath("//*[text()='Remove']")).click();
++    //4. “It’s gone!” mesajinin goruntulendigini dogrulayın.
++    WebElement itsGone = driver.findElement(By.xpath("//p[@id='message']"));
++    Assert.assertTrue(itsGone.isDisplayed());
++    //5. Add butonuna tıklayın ve it's back! yazisi cikincaya kadar bekleyin
++    driver.findElement(By.xpath("//*[text()='Add']")).click();
++    //6. “It’s back!” mesajinin goruntulendigini dogrulayın.
++    WebElement itsBack = driver.findElement(By.xpath("//p[@id='message']"));
++    Assert.assertTrue(itsBack.isDisplayed());
++
++}
++@Test
++    public void explicitlyWait(){
++    WebDriverManager.chromedriver().setup();
++    WebDriver driver = new ChromeDriver();
++    driver.manage().window().maximize();
++    driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(1));
++// 2 explicitliyWait ile asagidaki bekleme islemlerini gerceklestirin
++// 2. https://the-internet.herokuapp.com/dynamic_controls adresine gidin.
++  driver.get("https://the-internet.herokuapp.com/dynamic_controls");
++    //3. Remove butonuna tıklayın ve it's gone! yazisi cikincaya kadar bekleyin
++    driver.findElement(By.xpath("//*[text()='Remove']")).click();
++    //4. “It’s gone!” mesajinin goruntulendigini dogrulayın.
++    WebDriverWait wait  = new WebDriverWait(driver,Duration.ofSeconds(40));
++    WebElement itsGoneElementi = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[text()='Remove']")));
++    Assert.assertTrue(itsGoneElementi.isDisplayed());
++    //5. Add butonuna tıklayın ve it's back! yazisi cikincaya kadar bekleyin
++
++    WebElement add = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[text()='Add']")));
++    add.click();
++    WebElement itsBackElementi =wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//p[@id='message']")));
++    Assert.assertTrue(itsBackElementi.isDisplayed());
++}
++
++}
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"AutoImportSettings\">\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\n  </component>\n  <component name=\"ChangeListManager\">\n    <list default=\"true\" id=\"b77ea066-6ef9-4a06-a2f4-41ab9ed3a9ec\" name=\"Changes\" comment=\"JUnitStudies\">\n      <change afterPath=\"$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C01_Assertions.java\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C02_Assertions.java\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C03_Assertions.java\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C04_YoutubeAssertions.java\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C05_CheckBox.java\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C06_RadioButton.java\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C07_TestBaseKullanimiz.java\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C08_DropDownMenu.java\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/src/test/java/tests/day05_iFrame_JsAlert_Windows/C01_DropDownMenu.java\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/src/test/java/tests/day05_iFrame_JsAlert_Windows/C02_DropDownMenuTestCase2.java\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/src/test/java/tests/utilities/TestBase.java\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/src/test/java/tests/utilities/TestBaseClass.java\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\n    </list>\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\n  </component>\n  <component name=\"FileTemplateManagerImpl\">\n    <option name=\"RECENT_TEMPLATES\">\n      <list>\n        <option value=\"package-info\" />\n        <option value=\"Class\" />\n      </list>\n    </option>\n  </component>\n  <component name=\"Git.Merge.Settings\">\n    <option name=\"BRANCH\" value=\"origin/master\" />\n  </component>\n  <component name=\"Git.Settings\">\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\n      <map>\n        <entry key=\"$PROJECT_DIR$\" value=\"master\" />\n      </map>\n    </option>\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\n  </component>\n  <component name=\"GitHubPullRequestSearchHistory\">{\n  &quot;lastFilter&quot;: {\n    &quot;state&quot;: &quot;OPEN&quot;,\n    &quot;assignee&quot;: &quot;Dorleada&quot;\n  }\n}</component>\n  <component name=\"GithubPullRequestsUISettings\">\n    <option name=\"selectedUrlAndAccountId\">\n      <UrlAndAccount>\n        <option name=\"accountId\" value=\"0a8d9c29-4a4a-4ffb-90c7-88e77eda7e0f\" />\n        <option name=\"url\" value=\"https://github.com/Dorleada/SeleniumStudies.git\" />\n      </UrlAndAccount>\n    </option>\n  </component>\n  <component name=\"ProjectColorInfo\">{\n  &quot;associatedIndex&quot;: 7\n}</component>\n  <component name=\"ProjectId\" id=\"2W9n9t6fPCFasayyE9I9Resm48D\" />\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\">\n    <ConfirmationsSetting value=\"1\" id=\"Add\" />\n  </component>\n  <component name=\"ProjectViewState\">\n    <option name=\"showLibraryContents\" value=\"true\" />\n  </component>\n  <component name=\"PropertiesComponent\">{\n  &quot;keyToString&quot;: {\n    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\n    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,\n    &quot;git-widget-placeholder&quot;: &quot;Selenium&quot;\n  }\n}</component>\n  <component name=\"RunManager\" selected=\"JUnit.C02_DropDownMenuTestCase2.DDMTest\">\n    <configuration name=\"C01_DropDownMenu\" type=\"JUnit\" factoryName=\"JUnit\" temporary=\"true\" nameIsGenerated=\"true\">\n      <module name=\"com.unityverse_Selenium\" />\n      <extension name=\"coverage\">\n        <pattern>\n          <option name=\"PATTERN\" value=\"tests.day05_iFrame_JsAlert_Windows.*\" />\n          <option name=\"ENABLED\" value=\"true\" />\n        </pattern>\n      </extension>\n      <option name=\"PACKAGE_NAME\" value=\"tests.day05_iFrame_JsAlert_Windows\" />\n      <option name=\"MAIN_CLASS_NAME\" value=\"tests.day05_iFrame_JsAlert_Windows.C01_DropDownMenu\" />\n      <option name=\"TEST_OBJECT\" value=\"class\" />\n      <method v=\"2\">\n        <option name=\"Make\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <configuration name=\"C01_DropDownMenu.DDMTest01\" type=\"JUnit\" factoryName=\"JUnit\" temporary=\"true\" nameIsGenerated=\"true\">\n      <module name=\"com.unityverse_Selenium\" />\n      <extension name=\"coverage\">\n        <pattern>\n          <option name=\"PATTERN\" value=\"tests.day05_iFrame_JsAlert_Windows.*\" />\n          <option name=\"ENABLED\" value=\"true\" />\n        </pattern>\n      </extension>\n      <option name=\"PACKAGE_NAME\" value=\"tests.day05_iFrame_JsAlert_Windows\" />\n      <option name=\"MAIN_CLASS_NAME\" value=\"tests.day05_iFrame_JsAlert_Windows.C01_DropDownMenu\" />\n      <option name=\"METHOD_NAME\" value=\"DDMTest01\" />\n      <option name=\"TEST_OBJECT\" value=\"method\" />\n      <method v=\"2\">\n        <option name=\"Make\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <configuration name=\"C01_DropDownMenu.DDMTest02\" type=\"JUnit\" factoryName=\"JUnit\" temporary=\"true\" nameIsGenerated=\"true\">\n      <module name=\"com.unityverse_Selenium\" />\n      <extension name=\"coverage\">\n        <pattern>\n          <option name=\"PATTERN\" value=\"tests.day05_iFrame_JsAlert_Windows.*\" />\n          <option name=\"ENABLED\" value=\"true\" />\n        </pattern>\n      </extension>\n      <option name=\"PACKAGE_NAME\" value=\"tests.day05_iFrame_JsAlert_Windows\" />\n      <option name=\"MAIN_CLASS_NAME\" value=\"tests.day05_iFrame_JsAlert_Windows.C01_DropDownMenu\" />\n      <option name=\"METHOD_NAME\" value=\"DDMTest02\" />\n      <option name=\"TEST_OBJECT\" value=\"method\" />\n      <method v=\"2\">\n        <option name=\"Make\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <configuration name=\"C02_DropDownMenuTestCase2.DDMTest\" type=\"JUnit\" factoryName=\"JUnit\" temporary=\"true\" nameIsGenerated=\"true\">\n      <module name=\"com.unityverse_Selenium\" />\n      <extension name=\"coverage\">\n        <pattern>\n          <option name=\"PATTERN\" value=\"tests.day05_iFrame_JsAlert_Windows.*\" />\n          <option name=\"ENABLED\" value=\"true\" />\n        </pattern>\n      </extension>\n      <option name=\"PACKAGE_NAME\" value=\"tests.day05_iFrame_JsAlert_Windows\" />\n      <option name=\"MAIN_CLASS_NAME\" value=\"tests.day05_iFrame_JsAlert_Windows.C02_DropDownMenuTestCase2\" />\n      <option name=\"METHOD_NAME\" value=\"DDMTest\" />\n      <option name=\"TEST_OBJECT\" value=\"method\" />\n      <method v=\"2\">\n        <option name=\"Make\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <configuration name=\"C08_DropDownMenu.Test01\" type=\"JUnit\" factoryName=\"JUnit\" temporary=\"true\" nameIsGenerated=\"true\">\n      <module name=\"com.unityverse_Selenium\" />\n      <extension name=\"coverage\">\n        <pattern>\n          <option name=\"PATTERN\" value=\"tests.Day04_JunitFrameWork_DropDown.*\" />\n          <option name=\"ENABLED\" value=\"true\" />\n        </pattern>\n      </extension>\n      <option name=\"PACKAGE_NAME\" value=\"tests.Day04_JunitFrameWork_DropDown\" />\n      <option name=\"MAIN_CLASS_NAME\" value=\"tests.Day04_JunitFrameWork_DropDown.C08_DropDownMenu\" />\n      <option name=\"METHOD_NAME\" value=\"Test01\" />\n      <option name=\"TEST_OBJECT\" value=\"method\" />\n      <method v=\"2\">\n        <option name=\"Make\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <recent_temporary>\n      <list>\n        <item itemvalue=\"JUnit.C02_DropDownMenuTestCase2.DDMTest\" />\n        <item itemvalue=\"JUnit.C01_DropDownMenu\" />\n        <item itemvalue=\"JUnit.C01_DropDownMenu.DDMTest02\" />\n        <item itemvalue=\"JUnit.C08_DropDownMenu.Test01\" />\n        <item itemvalue=\"JUnit.C01_DropDownMenu.DDMTest01\" />\n      </list>\n    </recent_temporary>\n  </component>\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\n  <component name=\"TaskManager\">\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\n      <changelist id=\"b77ea066-6ef9-4a06-a2f4-41ab9ed3a9ec\" name=\"Changes\" comment=\"\" />\n      <created>1696153519118</created>\n      <option name=\"number\" value=\"Default\" />\n      <option name=\"presentableId\" value=\"Default\" />\n      <updated>1696153519118</updated>\n    </task>\n    <task id=\"LOCAL-00001\" summary=\"DriverStuides and FirstTest\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1696403959840</created>\n      <option name=\"number\" value=\"00001\" />\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1696403959840</updated>\n    </task>\n    <task id=\"LOCAL-00002\" summary=\"ManageMethodsStudies\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1696513093901</created>\n      <option name=\"number\" value=\"00002\" />\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1696513093901</updated>\n    </task>\n    <task id=\"LOCAL-00003\" summary=\"JUnitStudies\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1696513533495</created>\n      <option name=\"number\" value=\"00003\" />\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1696513533495</updated>\n    </task>\n    <option name=\"localTasksCounter\" value=\"4\" />\n    <servers />\n  </component>\n  <component name=\"Vcs.Log.Tabs.Properties\">\n    <option name=\"RECENT_FILTERS\">\n      <map>\n        <entry key=\"User\">\n          <value>\n            <list>\n              <RecentGroup>\n                <option name=\"FILTER_VALUES\">\n                  <option value=\"*\" />\n                </option>\n              </RecentGroup>\n            </list>\n          </value>\n        </entry>\n      </map>\n    </option>\n    <option name=\"TAB_STATES\">\n      <map>\n        <entry key=\"MAIN\">\n          <value>\n            <State />\n          </value>\n        </entry>\n      </map>\n    </option>\n  </component>\n  <component name=\"VcsManagerConfiguration\">\n    <MESSAGE value=\"DriverStuides and FirstTest\" />\n    <MESSAGE value=\"ManageMethodsStudies\" />\n    <MESSAGE value=\"JUnitStudies\" />\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"JUnitStudies\" />\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	
++++ b/.idea/workspace.xml	
+@@ -4,20 +4,14 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="b77ea066-6ef9-4a06-a2f4-41ab9ed3a9ec" name="Changes" comment="JUnitStudies">
+-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C01_Assertions.java" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C02_Assertions.java" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C03_Assertions.java" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C04_YoutubeAssertions.java" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C05_CheckBox.java" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C06_RadioButton.java" afterDir="false" />
++    <list default="true" id="b77ea066-6ef9-4a06-a2f4-41ab9ed3a9ec" name="Changes" comment="ActionStudies">
+       <change afterPath="$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C07_TestBaseKullanimiz.java" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C08_DropDownMenu.java" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/day05_iFrame_JsAlert_Windows/C01_DropDownMenu.java" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/day05_iFrame_JsAlert_Windows/C02_DropDownMenuTestCase2.java" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/utilities/TestBase.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/test/java/tests/day06_actionsClass_FileTestleri/C04_keyboardActions.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/test/java/tests/day06_actionsClass_FileTestleri/C05_facebookKayitTesti.java" afterDir="false" />
+       <change afterPath="$PROJECT_DIR$/src/test/java/tests/utilities/TestBaseClass.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/test/java/tests/utilities/TestBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/tests/utilities/TestBase.java" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -38,7 +32,7 @@
+   <component name="Git.Settings">
+     <option name="RECENT_BRANCH_BY_REPOSITORY">
+       <map>
+-        <entry key="$PROJECT_DIR$" value="master" />
++        <entry key="$PROJECT_DIR$" value="Selenium" />
+       </map>
+     </option>
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+@@ -72,84 +66,93 @@
+     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+-    &quot;git-widget-placeholder&quot;: &quot;Selenium&quot;
++    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
++    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
++    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
++    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
++    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
+   }
+ }</component>
+-  <component name="RunManager" selected="JUnit.C02_DropDownMenuTestCase2.DDMTest">
+-    <configuration name="C01_DropDownMenu" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
++  <component name="RecentsManager">
++    <key name="MoveFile.RECENT_KEYS">
++      <recent name="$PROJECT_DIR$/src/test/java/tests" />
++    </key>
++  </component>
++  <component name="RunManager" selected="JUnit.C01_Webtables.webtable">
++    <configuration name="C01_Webtables.webtable" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+       <module name="com.unityverse_Selenium" />
+       <extension name="coverage">
+         <pattern>
+-          <option name="PATTERN" value="tests.day05_iFrame_JsAlert_Windows.*" />
++          <option name="PATTERN" value="tests.day08_Webtables.*" />
+           <option name="ENABLED" value="true" />
+         </pattern>
+       </extension>
+-      <option name="PACKAGE_NAME" value="tests.day05_iFrame_JsAlert_Windows" />
+-      <option name="MAIN_CLASS_NAME" value="tests.day05_iFrame_JsAlert_Windows.C01_DropDownMenu" />
+-      <option name="TEST_OBJECT" value="class" />
++      <option name="PACKAGE_NAME" value="tests.day08_Webtables" />
++      <option name="MAIN_CLASS_NAME" value="tests.day08_Webtables.C01_Webtables" />
++      <option name="METHOD_NAME" value="webtable" />
++      <option name="TEST_OBJECT" value="method" />
+       <method v="2">
+         <option name="Make" enabled="true" />
+       </method>
+     </configuration>
+-    <configuration name="C01_DropDownMenu.DDMTest01" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
++    <configuration name="C03_ExplicitlyWait.isEnabled" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+       <module name="com.unityverse_Selenium" />
+       <extension name="coverage">
+         <pattern>
+-          <option name="PATTERN" value="tests.day05_iFrame_JsAlert_Windows.*" />
++          <option name="PATTERN" value="tests.day07_Waits_Webtables.*" />
+           <option name="ENABLED" value="true" />
+         </pattern>
+       </extension>
+-      <option name="PACKAGE_NAME" value="tests.day05_iFrame_JsAlert_Windows" />
+-      <option name="MAIN_CLASS_NAME" value="tests.day05_iFrame_JsAlert_Windows.C01_DropDownMenu" />
+-      <option name="METHOD_NAME" value="DDMTest01" />
++      <option name="PACKAGE_NAME" value="tests.day07_Waits_Webtables" />
++      <option name="MAIN_CLASS_NAME" value="tests.day07_Waits_Webtables.C03_ExplicitlyWait" />
++      <option name="METHOD_NAME" value="isEnabled" />
+       <option name="TEST_OBJECT" value="method" />
+       <method v="2">
+         <option name="Make" enabled="true" />
+       </method>
+     </configuration>
+-    <configuration name="C01_DropDownMenu.DDMTest02" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
++    <configuration name="C04_Cookies.CookieTesti" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+       <module name="com.unityverse_Selenium" />
+       <extension name="coverage">
+         <pattern>
+-          <option name="PATTERN" value="tests.day05_iFrame_JsAlert_Windows.*" />
++          <option name="PATTERN" value="tests.day07_Waits_Webtables.*" />
+           <option name="ENABLED" value="true" />
+         </pattern>
+       </extension>
+-      <option name="PACKAGE_NAME" value="tests.day05_iFrame_JsAlert_Windows" />
+-      <option name="MAIN_CLASS_NAME" value="tests.day05_iFrame_JsAlert_Windows.C01_DropDownMenu" />
+-      <option name="METHOD_NAME" value="DDMTest02" />
++      <option name="PACKAGE_NAME" value="tests.day07_Waits_Webtables" />
++      <option name="MAIN_CLASS_NAME" value="tests.day07_Waits_Webtables.C04_Cookies" />
++      <option name="METHOD_NAME" value="CookieTesti" />
+       <option name="TEST_OBJECT" value="method" />
+       <method v="2">
+         <option name="Make" enabled="true" />
+       </method>
+     </configuration>
+-    <configuration name="C02_DropDownMenuTestCase2.DDMTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
++    <configuration name="C05_WebTables" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+       <module name="com.unityverse_Selenium" />
+       <extension name="coverage">
+         <pattern>
+-          <option name="PATTERN" value="tests.day05_iFrame_JsAlert_Windows.*" />
++          <option name="PATTERN" value="tests.day07_Waits_Webtables.*" />
+           <option name="ENABLED" value="true" />
+         </pattern>
+       </extension>
+-      <option name="PACKAGE_NAME" value="tests.day05_iFrame_JsAlert_Windows" />
+-      <option name="MAIN_CLASS_NAME" value="tests.day05_iFrame_JsAlert_Windows.C02_DropDownMenuTestCase2" />
+-      <option name="METHOD_NAME" value="DDMTest" />
+-      <option name="TEST_OBJECT" value="method" />
++      <option name="PACKAGE_NAME" value="tests.day07_Waits_Webtables" />
++      <option name="MAIN_CLASS_NAME" value="tests.day07_Waits_Webtables.C05_WebTables" />
++      <option name="TEST_OBJECT" value="class" />
+       <method v="2">
+         <option name="Make" enabled="true" />
+       </method>
+     </configuration>
+-    <configuration name="C08_DropDownMenu.Test01" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
++    <configuration name="C05_WebTables.amazonWebTableTesti" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+       <module name="com.unityverse_Selenium" />
+       <extension name="coverage">
+         <pattern>
+-          <option name="PATTERN" value="tests.Day04_JunitFrameWork_DropDown.*" />
++          <option name="PATTERN" value="tests.day07_Waits_Webtables.*" />
+           <option name="ENABLED" value="true" />
+         </pattern>
+       </extension>
+-      <option name="PACKAGE_NAME" value="tests.Day04_JunitFrameWork_DropDown" />
+-      <option name="MAIN_CLASS_NAME" value="tests.Day04_JunitFrameWork_DropDown.C08_DropDownMenu" />
+-      <option name="METHOD_NAME" value="Test01" />
++      <option name="PACKAGE_NAME" value="tests.day07_Waits_Webtables" />
++      <option name="MAIN_CLASS_NAME" value="tests.day07_Waits_Webtables.C05_WebTables" />
++      <option name="METHOD_NAME" value="amazonWebTableTesti" />
+       <option name="TEST_OBJECT" value="method" />
+       <method v="2">
+         <option name="Make" enabled="true" />
+@@ -157,11 +160,11 @@
+     </configuration>
+     <recent_temporary>
+       <list>
+-        <item itemvalue="JUnit.C02_DropDownMenuTestCase2.DDMTest" />
+-        <item itemvalue="JUnit.C01_DropDownMenu" />
+-        <item itemvalue="JUnit.C01_DropDownMenu.DDMTest02" />
+-        <item itemvalue="JUnit.C08_DropDownMenu.Test01" />
+-        <item itemvalue="JUnit.C01_DropDownMenu.DDMTest01" />
++        <item itemvalue="JUnit.C01_Webtables.webtable" />
++        <item itemvalue="JUnit.C05_WebTables.amazonWebTableTesti" />
++        <item itemvalue="JUnit.C05_WebTables" />
++        <item itemvalue="JUnit.C04_Cookies.CookieTesti" />
++        <item itemvalue="JUnit.C03_ExplicitlyWait.isEnabled" />
+       </list>
+     </recent_temporary>
+   </component>
+@@ -198,7 +201,23 @@
+       <option name="project" value="LOCAL" />
+       <updated>1696513533495</updated>
+     </task>
+-    <option name="localTasksCounter" value="4" />
++    <task id="LOCAL-00004" summary="MultiTabStudies">
++      <option name="closed" value="true" />
++      <created>1696924740141</created>
++      <option name="number" value="00004" />
++      <option name="presentableId" value="LOCAL-00004" />
++      <option name="project" value="LOCAL" />
++      <updated>1696924740141</updated>
++    </task>
++    <task id="LOCAL-00005" summary="ActionStudies">
++      <option name="closed" value="true" />
++      <created>1697040310739</created>
++      <option name="number" value="00005" />
++      <option name="presentableId" value="LOCAL-00005" />
++      <option name="project" value="LOCAL" />
++      <updated>1697040310739</updated>
++    </task>
++    <option name="localTasksCounter" value="6" />
+     <servers />
+   </component>
+   <component name="Vcs.Log.Tabs.Properties">
+@@ -231,6 +250,8 @@
+     <MESSAGE value="DriverStuides and FirstTest" />
+     <MESSAGE value="ManageMethodsStudies" />
+     <MESSAGE value="JUnitStudies" />
+-    <option name="LAST_COMMIT_MESSAGE" value="JUnitStudies" />
++    <MESSAGE value="MultiTabStudies" />
++    <MESSAGE value="ActionStudies" />
++    <option name="LAST_COMMIT_MESSAGE" value="ActionStudies" />
+   </component>
+ </project>
+\ No newline at end of file
+Index: src/test/java/tests/day07_Waits_Webtables/C03_ExplicitlyWait.java
+===================================================================
+diff --git a/src/test/java/tests/day07_Waits_Webtables/C03_ExplicitlyWait.java b/src/test/java/tests/day07_Waits_Webtables/C03_ExplicitlyWait.java
+new file mode 100644
+--- /dev/null	
++++ b/src/test/java/tests/day07_Waits_Webtables/C03_ExplicitlyWait.java	
+@@ -0,0 +1,48 @@
++package tests.day07_Waits_Webtables;
++
++import io.github.bonigarcia.wdm.WebDriverManager;
++import org.junit.Assert;
++import org.junit.Test;
++import org.openqa.selenium.By;
++import org.openqa.selenium.WebDriver;
++import org.openqa.selenium.WebElement;
++import org.openqa.selenium.chrome.ChromeDriver;
++import org.openqa.selenium.support.ui.ExpectedConditions;
++import org.openqa.selenium.support.ui.WebDriverWait;
++import tests.utilities.TestBase;
++
++import java.time.Duration;
++
++public class C03_ExplicitlyWait {
++
++        @Test
++        public void isEnabled(){
++            WebDriverManager.chromedriver().setup();
++            WebDriver  driver = new ChromeDriver();
++            driver.manage().window().maximize();
++            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(1));
++
++
++            //    2. Bir metod olusturun : isEnabled()
++//3. https://the-internet.herokuapp.com/dynamic_controls adresine gidin.//*[text()='Enable']
++            driver.get("https://the-internet.herokuapp.com/dynamic_controls");
++//            4. Textbox’in etkin olmadigini(enabled) dogrulayın
++            WebElement textBox = driver.findElement(By.xpath("//input[@type='text']"));
++            driver.findElement(By.xpath("//*[text()='Enable']")).click();
++            WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(40));
++            wait.until(ExpectedConditions.elementToBeClickable(textBox));
++            Assert.assertTrue(textBox.isEnabled());
++
++//5. Enable butonuna tıklayın ve textbox etkin oluncaya kadar bekleyin
++
++
++//6. “It’s enabled!” mesajinin goruntulendigini dogrulayın.
++            WebElement itsEnabled = driver.findElement(By.xpath("//p[@id='message']"));
++            Assert.assertTrue(itsEnabled.isDisplayed());
++//7. Textbox’in etkin oldugunu(enabled) dogrulayın.
++            Assert.assertTrue(textBox.isEnabled());
++
++
++
++        }
++}
+Index: .idea/shelf/Uncommitted_changes_before_Checkout_at_10_10_2023_11_00_[Changes]1/shelved.patch
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Checkout_at_10_10_2023_11_00_[Changes]1/shelved.patch b/.idea/shelf/Uncommitted_changes_before_Checkout_at_10_10_2023_11_00_[Changes]1/shelved.patch
+new file mode 100644
+--- /dev/null	
++++ b/.idea/shelf/Uncommitted_changes_before_Checkout_at_10_10_2023_11_00_[Changes]1/shelved.patch	
+@@ -0,0 +1,537 @@
++Index: src/test/java/tests/day06_actionsClass_FileTestleri/C01_actionClass.java
++IDEA additional info:
++Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
++<+>UTF-8
++===================================================================
++diff --git a/src/test/java/tests/day06_actionsClass_FileTestleri/C01_actionClass.java b/src/test/java/tests/day06_actionsClass_FileTestleri/C01_actionClass.java
++new file mode 100644
++--- /dev/null	
+++++ b/src/test/java/tests/day06_actionsClass_FileTestleri/C01_actionClass.java	
++@@ -0,0 +1,43 @@
+++package tests.day06_actionsClass_FileTestleri;
+++
+++import org.junit.Assert;
+++import org.junit.Test;
+++import org.openqa.selenium.By;
+++import org.openqa.selenium.WebElement;
+++import org.openqa.selenium.interactions.Actions;
+++import tests.utilities.TestBase;
+++
+++import javax.swing.*;
+++import java.util.Set;
+++
+++public class C01_actionClass extends TestBase {
+++    @Test
+++    public void test01() {
+++//    2- https://the-internet.herokuapp.com/context_menu sitesine gidin
+++        driver.get("https://the-internet.herokuapp.com/context_menu");
+++       String firstWHD = driver.getWindowHandle();
+++//            3- Cizili alan uzerinde sag click yapin
+++        Actions actions = new Actions(driver);
+++        WebElement basılacakKutu = driver.findElement(By.id("hot-spot"));
+++        actions.contextClick(basılacakKutu).perform();
+++//4- Alert’te cikan yazinin “You selected a context menu” oldugunu test edin.
+++        String expectedYazi = "You selected a context menu";
+++        String actualYazi = driver.switchTo().alert().getText();
+++        Assert.assertEquals(expectedYazi,actualYazi);
+++//5- Tamam diyerek alert’i kapatalim
+++        driver.switchTo().alert().accept();
+++//6- Elemental Selenium linkine tiklayalim
+++      driver.findElement(By.linkText("Elemental Selenium")).click();
+++        Set<String> WHDS = driver.getWindowHandles();
+++        String secondWHD = "";
+++        for (String each: WHDS
+++             ) {
+++            if(!firstWHD.equals(each)) secondWHD = each;
+++        }
+++        driver.switchTo().window(secondWHD);
+++//7- Acilan sayfada h1 taginda “Make sure your code lands” yazdigini test edelim
+++String expectedHeader = "Make sure your code lands";
+++String actualHeader = driver.findElement(By.className("home-header")).getText();
+++Assert.assertEquals(expectedHeader,actualHeader);
+++    }
+++}
++\ No newline at end of file
++Index: src/test/java/tests/day06_actionsClass_FileTestleri/C03_Actions.java
++IDEA additional info:
++Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
++<+>UTF-8
++===================================================================
++diff --git a/src/test/java/tests/day06_actionsClass_FileTestleri/C03_Actions.java b/src/test/java/tests/day06_actionsClass_FileTestleri/C03_Actions.java
++new file mode 100644
++--- /dev/null	
+++++ b/src/test/java/tests/day06_actionsClass_FileTestleri/C03_Actions.java	
++@@ -0,0 +1,28 @@
+++package tests.day06_actionsClass_FileTestleri;
+++
+++import org.junit.Assert;
+++import org.junit.Test;
+++import org.openqa.selenium.By;
+++import org.openqa.selenium.WebElement;
+++import org.openqa.selenium.devtools.v85.network.model.DataReceived;
+++import org.openqa.selenium.interactions.Actions;
+++import tests.utilities.TestBase;
+++
+++public class C03_Actions extends TestBase {
+++    @Test
+++    public void test01(){
+++       // 1- https://www.amazon.com/ adresine gidin
+++        driver.get("https://www.amazon.com/");
+++       // 2- Sag ust bolumde bulunan “Account & Lists” menusunun acilmasi icin mouse’u bu menunun ustune getirin
+++        Actions actions = new Actions(driver);
+++        WebElement accountsButton = driver.findElement(By.xpath("//*[text()='Account & Lists']"));
+++        actions.moveToElement(accountsButton).perform();
+++       // 3- “Create a list” butonuna basin
+++    driver.findElement(By.xpath("//*[text()='Create a List']")).click();
+++       // 4- Acilan sayfada “Your Lists” yazisi oldugunu test edin
+++        String expectedHeader = "Your Lists";
+++        String actualIcerik = driver.findElement(By.xpath("//*[text()='Your Lists']")).getText();
+++        Assert.assertEquals(expectedHeader,actualIcerik);
+++
+++    }
+++}
++Index: src/test/java/tests/day06_actionsClass_FileTestleri/C02_ActionsDemoQA.java
++IDEA additional info:
++Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
++<+>UTF-8
++===================================================================
++diff --git a/src/test/java/tests/day06_actionsClass_FileTestleri/C02_ActionsDemoQA.java b/src/test/java/tests/day06_actionsClass_FileTestleri/C02_ActionsDemoQA.java
++new file mode 100644
++--- /dev/null	
+++++ b/src/test/java/tests/day06_actionsClass_FileTestleri/C02_ActionsDemoQA.java	
++@@ -0,0 +1,27 @@
+++package tests.day06_actionsClass_FileTestleri;
+++
+++import org.junit.Assert;
+++import org.junit.Test;
+++import org.openqa.selenium.By;
+++import org.openqa.selenium.WebElement;
+++import org.openqa.selenium.interactions.Actions;
+++import tests.utilities.TestBase;
+++
+++import java.nio.file.WatchEvent;
+++
+++public class C02_ActionsDemoQA extends TestBase {
+++    @Test
+++    public void DragMeAndDropHere (){
+++      //  1- https://demoqa.com/droppable adresine gidelim
+++        driver.get("https://demoqa.com/droppable");
+++      //  2- “Drag me” butonunu tutup “Drop here” kutusunun ustune birakalim
+++        WebElement dragME = driver.findElement(By.xpath("//*[text()='Drag me']"));
+++        Actions actions = new Actions(driver);
+++        WebElement dropHere = driver.findElement(By.xpath("//*[text()='Drop here']"));
+++      actions.dragAndDrop(dragME,dropHere).perform();
+++      //  3- “Drop here” yazisi yerine “Dropped!” oldugunu test edin
+++        String expectedIcerik = "Dropped!";
+++        String actualIcerik = driver.findElement(By.xpath("//*[text()='Dropped!']")).getText();
+++        Assert.assertEquals(expectedIcerik,actualIcerik);
+++    }
+++}
++Index: .idea/workspace.xml
++IDEA additional info:
++Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
++<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"AutoImportSettings\">\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\n  </component>\n  <component name=\"ChangeListManager\">\n    <list default=\"true\" id=\"b77ea066-6ef9-4a06-a2f4-41ab9ed3a9ec\" name=\"Changes\" comment=\"JUnitStudies\">\n      <change afterPath=\"$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C01_Assertions.java\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C02_Assertions.java\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C03_Assertions.java\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C04_YoutubeAssertions.java\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C05_CheckBox.java\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C06_RadioButton.java\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C07_TestBaseKullanimiz.java\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C08_DropDownMenu.java\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/src/test/java/tests/day05_iFrame_JsAlert_Windows/C01_DropDownMenu.java\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/src/test/java/tests/day05_iFrame_JsAlert_Windows/C02_DropDownMenuTestCase2.java\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/src/test/java/tests/utilities/TestBase.java\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/src/test/java/tests/utilities/TestBaseClass.java\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\n    </list>\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\n  </component>\n  <component name=\"FileTemplateManagerImpl\">\n    <option name=\"RECENT_TEMPLATES\">\n      <list>\n        <option value=\"package-info\" />\n        <option value=\"Class\" />\n      </list>\n    </option>\n  </component>\n  <component name=\"Git.Merge.Settings\">\n    <option name=\"BRANCH\" value=\"origin/master\" />\n  </component>\n  <component name=\"Git.Settings\">\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\n      <map>\n        <entry key=\"$PROJECT_DIR$\" value=\"master\" />\n      </map>\n    </option>\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\n  </component>\n  <component name=\"GitHubPullRequestSearchHistory\">{\n  &quot;lastFilter&quot;: {\n    &quot;state&quot;: &quot;OPEN&quot;,\n    &quot;assignee&quot;: &quot;Dorleada&quot;\n  }\n}</component>\n  <component name=\"GithubPullRequestsUISettings\">\n    <option name=\"selectedUrlAndAccountId\">\n      <UrlAndAccount>\n        <option name=\"accountId\" value=\"0a8d9c29-4a4a-4ffb-90c7-88e77eda7e0f\" />\n        <option name=\"url\" value=\"https://github.com/Dorleada/SeleniumStudies.git\" />\n      </UrlAndAccount>\n    </option>\n  </component>\n  <component name=\"ProjectColorInfo\">{\n  &quot;associatedIndex&quot;: 7\n}</component>\n  <component name=\"ProjectId\" id=\"2W9n9t6fPCFasayyE9I9Resm48D\" />\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\">\n    <ConfirmationsSetting value=\"1\" id=\"Add\" />\n  </component>\n  <component name=\"ProjectViewState\">\n    <option name=\"showLibraryContents\" value=\"true\" />\n  </component>\n  <component name=\"PropertiesComponent\">{\n  &quot;keyToString&quot;: {\n    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\n    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,\n    &quot;git-widget-placeholder&quot;: &quot;Selenium&quot;\n  }\n}</component>\n  <component name=\"RunManager\" selected=\"JUnit.C02_DropDownMenuTestCase2.DDMTest\">\n    <configuration name=\"C01_DropDownMenu\" type=\"JUnit\" factoryName=\"JUnit\" temporary=\"true\" nameIsGenerated=\"true\">\n      <module name=\"com.unityverse_Selenium\" />\n      <extension name=\"coverage\">\n        <pattern>\n          <option name=\"PATTERN\" value=\"tests.day05_iFrame_JsAlert_Windows.*\" />\n          <option name=\"ENABLED\" value=\"true\" />\n        </pattern>\n      </extension>\n      <option name=\"PACKAGE_NAME\" value=\"tests.day05_iFrame_JsAlert_Windows\" />\n      <option name=\"MAIN_CLASS_NAME\" value=\"tests.day05_iFrame_JsAlert_Windows.C01_DropDownMenu\" />\n      <option name=\"TEST_OBJECT\" value=\"class\" />\n      <method v=\"2\">\n        <option name=\"Make\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <configuration name=\"C01_DropDownMenu.DDMTest01\" type=\"JUnit\" factoryName=\"JUnit\" temporary=\"true\" nameIsGenerated=\"true\">\n      <module name=\"com.unityverse_Selenium\" />\n      <extension name=\"coverage\">\n        <pattern>\n          <option name=\"PATTERN\" value=\"tests.day05_iFrame_JsAlert_Windows.*\" />\n          <option name=\"ENABLED\" value=\"true\" />\n        </pattern>\n      </extension>\n      <option name=\"PACKAGE_NAME\" value=\"tests.day05_iFrame_JsAlert_Windows\" />\n      <option name=\"MAIN_CLASS_NAME\" value=\"tests.day05_iFrame_JsAlert_Windows.C01_DropDownMenu\" />\n      <option name=\"METHOD_NAME\" value=\"DDMTest01\" />\n      <option name=\"TEST_OBJECT\" value=\"method\" />\n      <method v=\"2\">\n        <option name=\"Make\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <configuration name=\"C01_DropDownMenu.DDMTest02\" type=\"JUnit\" factoryName=\"JUnit\" temporary=\"true\" nameIsGenerated=\"true\">\n      <module name=\"com.unityverse_Selenium\" />\n      <extension name=\"coverage\">\n        <pattern>\n          <option name=\"PATTERN\" value=\"tests.day05_iFrame_JsAlert_Windows.*\" />\n          <option name=\"ENABLED\" value=\"true\" />\n        </pattern>\n      </extension>\n      <option name=\"PACKAGE_NAME\" value=\"tests.day05_iFrame_JsAlert_Windows\" />\n      <option name=\"MAIN_CLASS_NAME\" value=\"tests.day05_iFrame_JsAlert_Windows.C01_DropDownMenu\" />\n      <option name=\"METHOD_NAME\" value=\"DDMTest02\" />\n      <option name=\"TEST_OBJECT\" value=\"method\" />\n      <method v=\"2\">\n        <option name=\"Make\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <configuration name=\"C02_DropDownMenuTestCase2.DDMTest\" type=\"JUnit\" factoryName=\"JUnit\" temporary=\"true\" nameIsGenerated=\"true\">\n      <module name=\"com.unityverse_Selenium\" />\n      <extension name=\"coverage\">\n        <pattern>\n          <option name=\"PATTERN\" value=\"tests.day05_iFrame_JsAlert_Windows.*\" />\n          <option name=\"ENABLED\" value=\"true\" />\n        </pattern>\n      </extension>\n      <option name=\"PACKAGE_NAME\" value=\"tests.day05_iFrame_JsAlert_Windows\" />\n      <option name=\"MAIN_CLASS_NAME\" value=\"tests.day05_iFrame_JsAlert_Windows.C02_DropDownMenuTestCase2\" />\n      <option name=\"METHOD_NAME\" value=\"DDMTest\" />\n      <option name=\"TEST_OBJECT\" value=\"method\" />\n      <method v=\"2\">\n        <option name=\"Make\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <configuration name=\"C08_DropDownMenu.Test01\" type=\"JUnit\" factoryName=\"JUnit\" temporary=\"true\" nameIsGenerated=\"true\">\n      <module name=\"com.unityverse_Selenium\" />\n      <extension name=\"coverage\">\n        <pattern>\n          <option name=\"PATTERN\" value=\"tests.Day04_JunitFrameWork_DropDown.*\" />\n          <option name=\"ENABLED\" value=\"true\" />\n        </pattern>\n      </extension>\n      <option name=\"PACKAGE_NAME\" value=\"tests.Day04_JunitFrameWork_DropDown\" />\n      <option name=\"MAIN_CLASS_NAME\" value=\"tests.Day04_JunitFrameWork_DropDown.C08_DropDownMenu\" />\n      <option name=\"METHOD_NAME\" value=\"Test01\" />\n      <option name=\"TEST_OBJECT\" value=\"method\" />\n      <method v=\"2\">\n        <option name=\"Make\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <recent_temporary>\n      <list>\n        <item itemvalue=\"JUnit.C02_DropDownMenuTestCase2.DDMTest\" />\n        <item itemvalue=\"JUnit.C01_DropDownMenu\" />\n        <item itemvalue=\"JUnit.C01_DropDownMenu.DDMTest02\" />\n        <item itemvalue=\"JUnit.C08_DropDownMenu.Test01\" />\n        <item itemvalue=\"JUnit.C01_DropDownMenu.DDMTest01\" />\n      </list>\n    </recent_temporary>\n  </component>\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\n  <component name=\"TaskManager\">\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\n      <changelist id=\"b77ea066-6ef9-4a06-a2f4-41ab9ed3a9ec\" name=\"Changes\" comment=\"\" />\n      <created>1696153519118</created>\n      <option name=\"number\" value=\"Default\" />\n      <option name=\"presentableId\" value=\"Default\" />\n      <updated>1696153519118</updated>\n    </task>\n    <task id=\"LOCAL-00001\" summary=\"DriverStuides and FirstTest\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1696403959840</created>\n      <option name=\"number\" value=\"00001\" />\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1696403959840</updated>\n    </task>\n    <task id=\"LOCAL-00002\" summary=\"ManageMethodsStudies\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1696513093901</created>\n      <option name=\"number\" value=\"00002\" />\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1696513093901</updated>\n    </task>\n    <task id=\"LOCAL-00003\" summary=\"JUnitStudies\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1696513533495</created>\n      <option name=\"number\" value=\"00003\" />\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1696513533495</updated>\n    </task>\n    <option name=\"localTasksCounter\" value=\"4\" />\n    <servers />\n  </component>\n  <component name=\"Vcs.Log.Tabs.Properties\">\n    <option name=\"RECENT_FILTERS\">\n      <map>\n        <entry key=\"User\">\n          <value>\n            <list>\n              <RecentGroup>\n                <option name=\"FILTER_VALUES\">\n                  <option value=\"*\" />\n                </option>\n              </RecentGroup>\n            </list>\n          </value>\n        </entry>\n      </map>\n    </option>\n    <option name=\"TAB_STATES\">\n      <map>\n        <entry key=\"MAIN\">\n          <value>\n            <State />\n          </value>\n        </entry>\n      </map>\n    </option>\n  </component>\n  <component name=\"VcsManagerConfiguration\">\n    <MESSAGE value=\"DriverStuides and FirstTest\" />\n    <MESSAGE value=\"ManageMethodsStudies\" />\n    <MESSAGE value=\"JUnitStudies\" />\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"JUnitStudies\" />\n  </component>\n</project>
++Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
++<+>UTF-8
++===================================================================
++diff --git a/.idea/workspace.xml b/.idea/workspace.xml
++--- a/.idea/workspace.xml	
+++++ b/.idea/workspace.xml	
++@@ -4,20 +4,19 @@
++     <option name="autoReloadType" value="SELECTIVE" />
++   </component>
++   <component name="ChangeListManager">
++-    <list default="true" id="b77ea066-6ef9-4a06-a2f4-41ab9ed3a9ec" name="Changes" comment="JUnitStudies">
++-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C01_Assertions.java" afterDir="false" />
++-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C02_Assertions.java" afterDir="false" />
++-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C03_Assertions.java" afterDir="false" />
++-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C04_YoutubeAssertions.java" afterDir="false" />
++-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C05_CheckBox.java" afterDir="false" />
++-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C06_RadioButton.java" afterDir="false" />
+++    <list default="true" id="b77ea066-6ef9-4a06-a2f4-41ab9ed3a9ec" name="Changes" comment="TestBaseStudies">
++       <change afterPath="$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C07_TestBaseKullanimiz.java" afterDir="false" />
++-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C08_DropDownMenu.java" afterDir="false" />
++-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/day05_iFrame_JsAlert_Windows/C01_DropDownMenu.java" afterDir="false" />
++-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/day05_iFrame_JsAlert_Windows/C02_DropDownMenuTestCase2.java" afterDir="false" />
++-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/utilities/TestBase.java" afterDir="false" />
+++      <change afterPath="$PROJECT_DIR$/src/test/java/tests/day05_iFrame_JsAlert_Windows/C06_cokluPencereKullanimi.java" afterDir="false" />
+++      <change afterPath="$PROJECT_DIR$/src/test/java/tests/day05_iFrame_JsAlert_Windows/C07_KontrolsuzCOkluPencere.java" afterDir="false" />
+++      <change afterPath="$PROJECT_DIR$/src/test/java/tests/day06_actionsClass_FileTestleri/C01_actionClass.java" afterDir="false" />
+++      <change afterPath="$PROJECT_DIR$/src/test/java/tests/day06_actionsClass_FileTestleri/C02_ActionsDemoQA.java" afterDir="false" />
+++      <change afterPath="$PROJECT_DIR$/src/test/java/tests/day06_actionsClass_FileTestleri/C03_Actions.java" afterDir="false" />
+++      <change afterPath="$PROJECT_DIR$/src/test/java/tests/day06_actionsClass_FileTestleri/C04_keyboardActions.java" afterDir="false" />
+++      <change afterPath="$PROJECT_DIR$/src/test/java/tests/day06_actionsClass_FileTestleri/C05_facebookKayitTesti.java" afterDir="false" />
++       <change afterPath="$PROJECT_DIR$/src/test/java/tests/utilities/TestBaseClass.java" afterDir="false" />
++       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+++      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+++      <change beforePath="$PROJECT_DIR$/src/test/java/tests/utilities/TestBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/tests/utilities/TestBase.java" afterDir="false" />
++     </list>
++     <option name="SHOW_DIALOG" value="false" />
++     <option name="HIGHLIGHT_CONFLICTS" value="true" />
++@@ -67,31 +66,41 @@
++   <component name="ProjectViewState">
++     <option name="showLibraryContents" value="true" />
++   </component>
++-  <component name="PropertiesComponent">{
++-  &quot;keyToString&quot;: {
++-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
++-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
++-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
++-    &quot;git-widget-placeholder&quot;: &quot;Selenium&quot;
+++  <component name="PropertiesComponent"><![CDATA[{
+++  "keyToString": {
+++    "RunOnceActivity.OpenProjectViewOnStart": "true",
+++    "RunOnceActivity.ShowReadmeOnStart": "true",
+++    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+++    "git-widget-placeholder": "master",
+++    "project.structure.last.edited": "Modules",
+++    "project.structure.proportion": "0.0",
+++    "project.structure.side.proportion": "0.0",
+++    "settings.editor.selected.configurable": "preferences.lookFeel"
++   }
++-}</component>
++-  <component name="RunManager" selected="JUnit.C02_DropDownMenuTestCase2.DDMTest">
++-    <configuration name="C01_DropDownMenu" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+++}]]></component>
+++  <component name="RecentsManager">
+++    <key name="MoveFile.RECENT_KEYS">
+++      <recent name="$PROJECT_DIR$/src/test/java/tests" />
+++    </key>
+++  </component>
+++  <component name="RunManager" selected="JUnit.C01_FileUploadTesti.fileUploadTEsti">
+++    <configuration name="C01_FileUploadTesti.fileUploadTEsti" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
++       <module name="com.unityverse_Selenium" />
++       <extension name="coverage">
++         <pattern>
++-          <option name="PATTERN" value="tests.day05_iFrame_JsAlert_Windows.*" />
+++          <option name="PATTERN" value="tests.day07_Waits_Cookies.*" />
++           <option name="ENABLED" value="true" />
++         </pattern>
++       </extension>
++-      <option name="PACKAGE_NAME" value="tests.day05_iFrame_JsAlert_Windows" />
++-      <option name="MAIN_CLASS_NAME" value="tests.day05_iFrame_JsAlert_Windows.C01_DropDownMenu" />
++-      <option name="TEST_OBJECT" value="class" />
+++      <option name="PACKAGE_NAME" value="tests.day07_Waits_Cookies" />
+++      <option name="MAIN_CLASS_NAME" value="tests.day07_Waits_Cookies.C01_FileUploadTesti" />
+++      <option name="METHOD_NAME" value="fileUploadTEsti" />
+++      <option name="TEST_OBJECT" value="method" />
++       <method v="2">
++         <option name="Make" enabled="true" />
++       </method>
++     </configuration>
++-    <configuration name="C01_DropDownMenu.DDMTest01" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+++    <configuration name="C02_DropDownMenuTestCase2.DDMTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
++       <module name="com.unityverse_Selenium" />
++       <extension name="coverage">
++         <pattern>
++@@ -100,56 +109,56 @@
++         </pattern>
++       </extension>
++       <option name="PACKAGE_NAME" value="tests.day05_iFrame_JsAlert_Windows" />
++-      <option name="MAIN_CLASS_NAME" value="tests.day05_iFrame_JsAlert_Windows.C01_DropDownMenu" />
++-      <option name="METHOD_NAME" value="DDMTest01" />
+++      <option name="MAIN_CLASS_NAME" value="tests.day05_iFrame_JsAlert_Windows.C02_DropDownMenuTestCase2" />
+++      <option name="METHOD_NAME" value="DDMTest" />
++       <option name="TEST_OBJECT" value="method" />
++       <method v="2">
++         <option name="Make" enabled="true" />
++       </method>
++     </configuration>
++-    <configuration name="C01_DropDownMenu.DDMTest02" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+++    <configuration name="C06_keyboardActions.test01" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
++       <module name="com.unityverse_Selenium" />
++       <extension name="coverage">
++         <pattern>
++-          <option name="PATTERN" value="tests.day05_iFrame_JsAlert_Windows.*" />
+++          <option name="PATTERN" value="tests.day06_actionsClass_FileTestleri.*" />
++           <option name="ENABLED" value="true" />
++         </pattern>
++       </extension>
++-      <option name="PACKAGE_NAME" value="tests.day05_iFrame_JsAlert_Windows" />
++-      <option name="MAIN_CLASS_NAME" value="tests.day05_iFrame_JsAlert_Windows.C01_DropDownMenu" />
++-      <option name="METHOD_NAME" value="DDMTest02" />
+++      <option name="PACKAGE_NAME" value="tests.day06_actionsClass_FileTestleri" />
+++      <option name="MAIN_CLASS_NAME" value="tests.day06_actionsClass_FileTestleri.C06_keyboardActions" />
+++      <option name="METHOD_NAME" value="test01" />
++       <option name="TEST_OBJECT" value="method" />
++       <method v="2">
++         <option name="Make" enabled="true" />
++       </method>
++     </configuration>
++-    <configuration name="C02_DropDownMenuTestCase2.DDMTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+++    <configuration name="C07_dosyaErisim.dosyaTesti01" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
++       <module name="com.unityverse_Selenium" />
++       <extension name="coverage">
++         <pattern>
++-          <option name="PATTERN" value="tests.day05_iFrame_JsAlert_Windows.*" />
+++          <option name="PATTERN" value="tests.day06_actionsClass_FileTestleri.*" />
++           <option name="ENABLED" value="true" />
++         </pattern>
++       </extension>
++-      <option name="PACKAGE_NAME" value="tests.day05_iFrame_JsAlert_Windows" />
++-      <option name="MAIN_CLASS_NAME" value="tests.day05_iFrame_JsAlert_Windows.C02_DropDownMenuTestCase2" />
++-      <option name="METHOD_NAME" value="DDMTest" />
+++      <option name="PACKAGE_NAME" value="tests.day06_actionsClass_FileTestleri" />
+++      <option name="MAIN_CLASS_NAME" value="tests.day06_actionsClass_FileTestleri.C07_dosyaErisim" />
+++      <option name="METHOD_NAME" value="dosyaTesti01" />
++       <option name="TEST_OBJECT" value="method" />
++       <method v="2">
++         <option name="Make" enabled="true" />
++       </method>
++     </configuration>
++-    <configuration name="C08_DropDownMenu.Test01" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+++    <configuration name="C08_DosyaIndirmeTesti.dosyaIndirmeTesti" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
++       <module name="com.unityverse_Selenium" />
++       <extension name="coverage">
++         <pattern>
++-          <option name="PATTERN" value="tests.Day04_JunitFrameWork_DropDown.*" />
+++          <option name="PATTERN" value="tests.day06_actionsClass_FileTestleri.*" />
++           <option name="ENABLED" value="true" />
++         </pattern>
++       </extension>
++-      <option name="PACKAGE_NAME" value="tests.Day04_JunitFrameWork_DropDown" />
++-      <option name="MAIN_CLASS_NAME" value="tests.Day04_JunitFrameWork_DropDown.C08_DropDownMenu" />
++-      <option name="METHOD_NAME" value="Test01" />
+++      <option name="PACKAGE_NAME" value="tests.day06_actionsClass_FileTestleri" />
+++      <option name="MAIN_CLASS_NAME" value="tests.day06_actionsClass_FileTestleri.C08_DosyaIndirmeTesti" />
+++      <option name="METHOD_NAME" value="dosyaIndirmeTesti" />
++       <option name="TEST_OBJECT" value="method" />
++       <method v="2">
++         <option name="Make" enabled="true" />
++@@ -157,11 +166,11 @@
++     </configuration>
++     <recent_temporary>
++       <list>
+++        <item itemvalue="JUnit.C01_FileUploadTesti.fileUploadTEsti" />
+++        <item itemvalue="JUnit.C08_DosyaIndirmeTesti.dosyaIndirmeTesti" />
+++        <item itemvalue="JUnit.C07_dosyaErisim.dosyaTesti01" />
+++        <item itemvalue="JUnit.C06_keyboardActions.test01" />
++         <item itemvalue="JUnit.C02_DropDownMenuTestCase2.DDMTest" />
++-        <item itemvalue="JUnit.C01_DropDownMenu" />
++-        <item itemvalue="JUnit.C01_DropDownMenu.DDMTest02" />
++-        <item itemvalue="JUnit.C08_DropDownMenu.Test01" />
++-        <item itemvalue="JUnit.C01_DropDownMenu.DDMTest01" />
++       </list>
++     </recent_temporary>
++   </component>
++Index: src/test/java/tests/day06_actionsClass_FileTestleri/C05_facebookKayitTesti.java
++IDEA additional info:
++Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
++<+>UTF-8
++===================================================================
++diff --git a/src/test/java/tests/day06_actionsClass_FileTestleri/C05_facebookKayitTesti.java b/src/test/java/tests/day06_actionsClass_FileTestleri/C05_facebookKayitTesti.java
++new file mode 100644
++--- /dev/null	
+++++ b/src/test/java/tests/day06_actionsClass_FileTestleri/C05_facebookKayitTesti.java	
++@@ -0,0 +1,52 @@
+++package tests.day06_actionsClass_FileTestleri;
+++
+++import com.github.javafaker.Faker;
+++import org.junit.AfterClass;
+++import org.junit.Test;
+++import org.openqa.selenium.By;
+++import org.openqa.selenium.Keys;
+++import org.openqa.selenium.WebElement;
+++import org.openqa.selenium.interactions.Actions;
+++import tests.utilities.TestBase;
+++
+++import java.security.Key;
+++
+++public class C05_facebookKayitTesti extends TestBase {
+++    @Test
+++    public void test01() throws InterruptedException {
+++       //1- https://www.facebook.com adresine gidelim
+++        driver.get("https://www.facebook.com");
+++       //2- Cookies kabul edin
+++       //3- Yeni hesap olustur butonuna basalim
+++        driver.findElement(By.xpath("//*[@*='open-registration-form-button']")).click();
+++       //4- Ad, soyad, mail ve sifre kutularina deger yazalim ve kaydol tusuna basalim
+++        WebElement adınKutusu = driver.findElement(By.xpath("//*[@placeholder='Adın']"));
+++        Actions actions = new Actions(driver);
+++        Faker faker = new Faker();
+++        String emailAdresi = faker.internet().emailAddress();
+++        actions.click(adınKutusu)
+++                .sendKeys(faker.name().firstName())
+++                .sendKeys(Keys.TAB)
+++                .sendKeys(faker.name().lastName())
+++                .sendKeys(Keys.TAB)
+++                .sendKeys(emailAdresi)
+++                .sendKeys(Keys.TAB)
+++                .sendKeys(emailAdresi)
+++                .sendKeys(Keys.TAB)
+++                .sendKeys(faker.internet().password())
+++                .sendKeys(Keys.TAB)
+++                .sendKeys(Keys.TAB)
+++                .sendKeys("23")
+++                .sendKeys(Keys.TAB)
+++                .sendKeys("haz")
+++                .sendKeys(Keys.TAB)
+++                .sendKeys("2000")
+++                .sendKeys(Keys.TAB).sendKeys(Keys.TAB).sendKeys(Keys.ARROW_RIGHT).perform();
+++        Thread.sleep(7000);
+++
+++        //5- Kaydol tusuna basalim
+++driver.findElement(By.xpath("//button[@name='websubmit']")).click();
+++
+++    }
+++
+++}
++Index: pom.xml
++IDEA additional info:
++Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
++<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\"\n         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n         xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n    <modelVersion>4.0.0</modelVersion>\n\n    <groupId>org.example</groupId>\n    <artifactId>com.unityverse_Selenium</artifactId>\n    <version>1.0-SNAPSHOT</version>\n\n    <properties>\n        <maven.compiler.source>20</maven.compiler.source>\n        <maven.compiler.target>20</maven.compiler.target>\n        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>\n    </properties>\n\n    <dependencies>\n        <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->\n        <dependency>\n            <groupId>org.seleniumhq.selenium</groupId>\n            <artifactId>selenium-java</artifactId>\n            <version>4.11.0</version>\n        </dependency>\n\n        <!-- https://mvnrepository.com/artifact/io.github.bonigarcia/webdrivermanager -->\n        <dependency>\n            <groupId>io.github.bonigarcia</groupId>\n            <artifactId>webdrivermanager</artifactId>\n            <version>5.5.2</version>\n        </dependency>\n        <!-- https://mvnrepository.com/artifact/junit/junit -->\n        <dependency>\n            <groupId>junit</groupId>\n            <artifactId>junit</artifactId>\n            <version>4.13.2</version>\n            <scope>test</scope>\n        </dependency>\n\n    </dependencies>\n\n</project>
++Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
++<+>UTF-8
++===================================================================
++diff --git a/pom.xml b/pom.xml
++--- a/pom.xml	
+++++ b/pom.xml	
++@@ -35,6 +35,12 @@
++             <version>4.13.2</version>
++             <scope>test</scope>
++         </dependency>
+++        <!-- https://mvnrepository.com/artifact/com.github.javafaker/javafaker -->
+++        <dependency>
+++            <groupId>com.github.javafaker</groupId>
+++            <artifactId>javafaker</artifactId>
+++            <version>1.0.2</version>
+++        </dependency>
++ 
++     </dependencies>
++ 
++Index: src/test/java/tests/day06_actionsClass_FileTestleri/C04_keyboardActions.java
++IDEA additional info:
++Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
++<+>UTF-8
++===================================================================
++diff --git a/src/test/java/tests/day06_actionsClass_FileTestleri/C04_keyboardActions.java b/src/test/java/tests/day06_actionsClass_FileTestleri/C04_keyboardActions.java
++new file mode 100644
++--- /dev/null	
+++++ b/src/test/java/tests/day06_actionsClass_FileTestleri/C04_keyboardActions.java	
++@@ -0,0 +1,40 @@
+++package tests.day06_actionsClass_FileTestleri;
+++
+++import net.bytebuddy.implementation.bytecode.ShiftLeft;
+++import org.junit.Assert;
+++import org.junit.Test;
+++import org.openqa.selenium.By;
+++import org.openqa.selenium.Keys;
+++import org.openqa.selenium.WebElement;
+++import org.openqa.selenium.interactions.Actions;
+++import tests.utilities.TestBase;
+++
+++import java.time.format.DateTimeFormatter;
+++
+++public class C04_keyboardActions extends TestBase {
+++
+++    @Test
+++    public void tset01(){
+++        //1- Bir Class olusturalim KeyboardActions1
+++//2- https://www.amazon.com sayfasina gidelim
+++        driver.get("https://www.amazon.com");
+++//3- Arama kutusuna actions method’larini kullanarak Samsung A71 yazdirin ve Enter’a basarak arama yaptirin
+++        WebElement aramaKutusu = driver.findElement(By.id("twotabsearchtextbox"));
+++        Actions actions = new Actions(driver);
+++        actions.click(aramaKutusu)
+++                .keyDown(Keys.SHIFT)
+++                .sendKeys("s")
+++                .keyUp(Keys.SHIFT)
+++                .sendKeys("amsung ")
+++                .keyDown(Keys.SHIFT)
+++                .sendKeys("a")
+++                .keyUp(Keys.SHIFT)
+++                .sendKeys("71" + Keys.ENTER).perform();
+++//4- aramanin gerceklestigini test edin
+++        WebElement sonucElementi = driver.findElement(By.xpath("//div[@class='a-section a-spacing-small a-spacing-top-small']"));
+++        String expectedIcerik = "Samsung A71";
+++        String actualIcerik = sonucElementi.getText();
+++
+++        Assert.assertTrue(actualIcerik.contains(expectedIcerik));
+++    }
+++}
++Index: src/test/java/tests/Day04_JunitFrameWork_DropDown/C07_TestBaseKullanimiz.java
++IDEA additional info:
++Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
++<+>UTF-8
++===================================================================
++diff --git a/src/test/java/tests/Day04_JunitFrameWork_DropDown/C07_TestBaseKullanimiz.java b/src/test/java/tests/Day04_JunitFrameWork_DropDown/C07_TestBaseKullanimiz.java
++new file mode 100644
++--- /dev/null	
+++++ b/src/test/java/tests/Day04_JunitFrameWork_DropDown/C07_TestBaseKullanimiz.java	
++@@ -0,0 +1,38 @@
+++package tests.Day04_JunitFrameWork_DropDown;
+++
+++import org.junit.Assert;
+++import org.junit.Test;
+++import org.openqa.selenium.By;
+++import org.openqa.selenium.Keys;
+++import org.openqa.selenium.WebElement;
+++import tests.utilities.TestBase;
+++
+++public class C07_TestBaseKullanimiz  extends TestBase{
+++
+++    /*
+++
+++    extends keyword
+++    icinde oldugumu C07 class'ini
+++    TestBase class'inin child class'i yapar
+++bu sayede C07 class'indan TestBase class'indaki
+++tum variable ve method'lari DIREKT kullanabiliriz
+++(static keyword'e dikkat etmek gerekir)
+++     */
+++@Test
+++    public void amazonTest(){
+++
+++    // Amazon anasayfaya gidin
+++    driver.get("https:amazon.com");
+++
+++
+++    //Nutella icin arama yapin
+++    WebElement aramaKutusu = driver.findElement(By.id("twotabsearchtextbox"));
+++    aramaKutusu.sendKeys("nutella"+ Keys.ENTER);
+++
+++    //Arama sonuclarinin Nutlella icerdigini test edin
+++WebElement nutellaArmasonucu = driver.findElement(By.xpath("//*[@class='a-section a-spacing-small a-spacing-top-small']"));
+++String actualSonucYazisi = nutellaArmasonucu.getText();
+++String expectedIcerik = "nutella";
+++    Assert.assertTrue(actualSonucYazisi.contains(expectedIcerik));
+++}
+++}
++Index: src/test/java/tests/utilities/TestBaseClass.java
++IDEA additional info:
++Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
++<+>UTF-8
++===================================================================
++diff --git a/src/test/java/tests/utilities/TestBaseClass.java b/src/test/java/tests/utilities/TestBaseClass.java
++new file mode 100644
++--- /dev/null	
+++++ b/src/test/java/tests/utilities/TestBaseClass.java	
++@@ -0,0 +1,28 @@
+++package tests.utilities;
+++
+++import io.github.bonigarcia.wdm.WebDriverManager;
+++import org.junit.After;
+++import org.junit.AfterClass;
+++import org.junit.Before;
+++import org.junit.BeforeClass;
+++import org.openqa.selenium.WebDriver;
+++import org.openqa.selenium.chrome.ChromeDriver;
+++
+++import java.time.Duration;
+++
+++public class TestBaseClass {
+++    public static WebDriver driver;
+++    @BeforeClass
+++    public static void setUp(){
+++        driver = new ChromeDriver();
+++        WebDriverManager.chromedriver().setup();
+++        driver.manage().window().maximize();
+++        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
+++        driver.get("https://the-internet.herokuapp.com/javascript_alerts ");
+++    }
+++    @AfterClass
+++    public static void tearDown() throws InterruptedException {
+++        Thread.sleep(3000);
+++        driver.close();
+++    }
+++}
+Index: src/test/java/tests/day07_Waits_Webtables/C01_ImpilicitlyWait.java
+===================================================================
+diff --git a/src/test/java/tests/day07_Waits_Webtables/C01_ImpilicitlyWait.java b/src/test/java/tests/day07_Waits_Webtables/C01_ImpilicitlyWait.java
+new file mode 100644
+--- /dev/null	
++++ b/src/test/java/tests/day07_Waits_Webtables/C01_ImpilicitlyWait.java	
+@@ -0,0 +1,28 @@
++package tests.day07_Waits_Webtables;
++
++import org.junit.Assert;
++import org.junit.Test;
++import org.openqa.selenium.By;
++import org.openqa.selenium.WebElement;
++import tests.utilities.TestBase;
++
++public class C01_ImpilicitlyWait extends TestBase {
++    @Test
++    public void isEnabled(){
++        //    2. Bir metod olusturun : isEnabled()
++//3. https://the-internet.herokuapp.com/dynamic_controls adresine gidin.//*[text()='Enable']
++driver.get("https://the-internet.herokuapp.com/dynamic_controls");
++//            4. Textbox’in etkin olmadigini(enabled) dogrulayın
++        WebElement textBox = driver.findElement(By.xpath("//input[@type='text']"));
++        Assert.assertFalse(textBox.isEnabled());
++//5. Enable butonuna tıklayın ve textbox etkin oluncaya kadar bekleyin
++driver.findElement(By.xpath("//*[text()='Enable']")).click();
++
++//6. “It’s enabled!” mesajinin goruntulendigini dogrulayın.
++WebElement itsEnabled = driver.findElement(By.xpath("//p[@id='message']"));
++Assert.assertTrue(itsEnabled.isDisplayed());
++//7. Textbox’in etkin oldugunu(enabled) dogrulayın.
++        Assert.assertTrue(textBox.isEnabled());
++    }
++
++}
+Index: src/test/java/tests/utilities/TestBaseClass.java
+===================================================================
+diff --git a/src/test/java/tests/utilities/TestBaseClass.java b/src/test/java/tests/utilities/TestBaseClass.java
+new file mode 100644
+--- /dev/null	
++++ b/src/test/java/tests/utilities/TestBaseClass.java	
+@@ -0,0 +1,28 @@
++package tests.utilities;
++
++import io.github.bonigarcia.wdm.WebDriverManager;
++import org.junit.After;
++import org.junit.AfterClass;
++import org.junit.Before;
++import org.junit.BeforeClass;
++import org.openqa.selenium.WebDriver;
++import org.openqa.selenium.chrome.ChromeDriver;
++
++import java.time.Duration;
++
++public class TestBaseClass {
++    public static WebDriver driver;
++    @BeforeClass
++    public static void setUp(){
++        driver = new ChromeDriver();
++        WebDriverManager.chromedriver().setup();
++        driver.manage().window().maximize();
++        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
++        driver.get("https://the-internet.herokuapp.com/javascript_alerts ");
++    }
++    @AfterClass
++    public static void tearDown() throws InterruptedException {
++        Thread.sleep(3000);
++        driver.close();
++    }
++}
+Index: .idea/shelf/Uncommitted_changes_before_Checkout_at_10_10_2023_11_00_[Changes]/shelved.patch
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Checkout_at_10_10_2023_11_00_[Changes]/shelved.patch b/.idea/shelf/Uncommitted_changes_before_Checkout_at_10_10_2023_11_00_[Changes]/shelved.patch
+new file mode 100644
+--- /dev/null	
++++ b/.idea/shelf/Uncommitted_changes_before_Checkout_at_10_10_2023_11_00_[Changes]/shelved.patch	
+@@ -0,0 +1,16 @@
++Index: src/test/java/tests/utilities/TestBase.java
++IDEA additional info:
++Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
++<+>package tests.utilities;\n\nimport io.github.bonigarcia.wdm.WebDriverManager;\nimport org.junit.After;\nimport org.junit.Before;\nimport org.openqa.selenium.WebDriver;\nimport org.openqa.selenium.chrome.ChromeDriver;\n\nimport java.time.Duration;\n\npublic class TestBase {\n   public WebDriver driver;\n    @Before\n    public void setUp(){\n        driver = new ChromeDriver();\n        WebDriverManager.chromedriver().setup();\n        driver.manage().window().maximize();\n        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));\n    }\n    @After\n    public void tearDown() throws InterruptedException {\n        Thread.sleep(3000);\n       // driver.quit();\n    }\n}\n
++===================================================================
++diff --git a/src/test/java/tests/utilities/TestBase.java b/src/test/java/tests/utilities/TestBase.java
++--- a/src/test/java/tests/utilities/TestBase.java	
+++++ b/src/test/java/tests/utilities/TestBase.java	
++@@ -20,6 +20,6 @@
++     @After
++     public void tearDown() throws InterruptedException {
++         Thread.sleep(3000);
++-       // driver.quit();
+++       driver.quit();
++     }
++ }
+Index: src/test/java/tests/day06_actionsClass_FileTestleri/C04_keyboardActions.java
+===================================================================
+diff --git a/src/test/java/tests/day06_actionsClass_FileTestleri/C04_keyboardActions.java b/src/test/java/tests/day06_actionsClass_FileTestleri/C04_keyboardActions.java
+new file mode 100644
+--- /dev/null	
++++ b/src/test/java/tests/day06_actionsClass_FileTestleri/C04_keyboardActions.java	
+@@ -0,0 +1,40 @@
++package tests.day06_actionsClass_FileTestleri;
++
++import net.bytebuddy.implementation.bytecode.ShiftLeft;
++import org.junit.Assert;
++import org.junit.Test;
++import org.openqa.selenium.By;
++import org.openqa.selenium.Keys;
++import org.openqa.selenium.WebElement;
++import org.openqa.selenium.interactions.Actions;
++import tests.utilities.TestBase;
++
++import java.time.format.DateTimeFormatter;
++
++public class C04_keyboardActions extends TestBase {
++
++    @Test
++    public void tset01(){
++        //1- Bir Class olusturalim KeyboardActions1
++//2- https://www.amazon.com sayfasina gidelim
++        driver.get("https://www.amazon.com");
++//3- Arama kutusuna actions method’larini kullanarak Samsung A71 yazdirin ve Enter’a basarak arama yaptirin
++        WebElement aramaKutusu = driver.findElement(By.id("twotabsearchtextbox"));
++        Actions actions = new Actions(driver);
++        actions.click(aramaKutusu)
++                .keyDown(Keys.SHIFT)
++                .sendKeys("s")
++                .keyUp(Keys.SHIFT)
++                .sendKeys("amsung ")
++                .keyDown(Keys.SHIFT)
++                .sendKeys("a")
++                .keyUp(Keys.SHIFT)
++                .sendKeys("71" + Keys.ENTER).perform();
++//4- aramanin gerceklestigini test edin
++        WebElement sonucElementi = driver.findElement(By.xpath("//div[@class='a-section a-spacing-small a-spacing-top-small']"));
++        String expectedIcerik = "Samsung A71";
++        String actualIcerik = sonucElementi.getText();
++
++        Assert.assertTrue(actualIcerik.contains(expectedIcerik));
++    }
++}
+Index: .idea/shelf/Uncommitted_changes_before_Checkout_at_10_10_2023_11_00__Changes_1.xml
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Checkout_at_10_10_2023_11_00__Changes_1.xml b/.idea/shelf/Uncommitted_changes_before_Checkout_at_10_10_2023_11_00__Changes_1.xml
+new file mode 100644
+--- /dev/null	
++++ b/.idea/shelf/Uncommitted_changes_before_Checkout_at_10_10_2023_11_00__Changes_1.xml	
+@@ -0,0 +1,4 @@
++<changelist name="Uncommitted_changes_before_Checkout_at_10_10_2023_11_00_[Changes]1" date="1696924839948" recycled="true" deleted="true">
++  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_10_10_2023_11_00_[Changes]1/shelved.patch" />
++  <option name="DESCRIPTION" value="Uncommitted changes before Checkout at 10.10.2023 11:00 [Changes]" />
++</changelist>
+\ No newline at end of file
+Index: src/test/java/tests/Day04_JunitFrameWork_DropDown/C07_TestBaseKullanimiz.java
+===================================================================
+diff --git a/src/test/java/tests/Day04_JunitFrameWork_DropDown/C07_TestBaseKullanimiz.java b/src/test/java/tests/Day04_JunitFrameWork_DropDown/C07_TestBaseKullanimiz.java
+new file mode 100644
+--- /dev/null	
++++ b/src/test/java/tests/Day04_JunitFrameWork_DropDown/C07_TestBaseKullanimiz.java	
+@@ -0,0 +1,38 @@
++package tests.Day04_JunitFrameWork_DropDown;
++
++import org.junit.Assert;
++import org.junit.Test;
++import org.openqa.selenium.By;
++import org.openqa.selenium.Keys;
++import org.openqa.selenium.WebElement;
++import tests.utilities.TestBase;
++
++public class C07_TestBaseKullanimiz  extends TestBase{
++
++    /*
++
++    extends keyword
++    icinde oldugumu C07 class'ini
++    TestBase class'inin child class'i yapar
++bu sayede C07 class'indan TestBase class'indaki
++tum variable ve method'lari DIREKT kullanabiliriz
++(static keyword'e dikkat etmek gerekir)
++     */
++@Test
++    public void amazonTest(){
++
++    // Amazon anasayfaya gidin
++    driver.get("https:amazon.com");
++
++
++    //Nutella icin arama yapin
++    WebElement aramaKutusu = driver.findElement(By.id("twotabsearchtextbox"));
++    aramaKutusu.sendKeys("nutella"+ Keys.ENTER);
++
++    //Arama sonuclarinin Nutlella icerdigini test edin
++WebElement nutellaArmasonucu = driver.findElement(By.xpath("//*[@class='a-section a-spacing-small a-spacing-top-small']"));
++String actualSonucYazisi = nutellaArmasonucu.getText();
++String expectedIcerik = "nutella";
++    Assert.assertTrue(actualSonucYazisi.contains(expectedIcerik));
++}
++}
+Index: .idea/shelf/Uncommitted_changes_before_Checkout_at_10_10_2023_11_00__Changes_.xml
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Checkout_at_10_10_2023_11_00__Changes_.xml b/.idea/shelf/Uncommitted_changes_before_Checkout_at_10_10_2023_11_00__Changes_.xml
+new file mode 100644
+--- /dev/null	
++++ b/.idea/shelf/Uncommitted_changes_before_Checkout_at_10_10_2023_11_00__Changes_.xml	
+@@ -0,0 +1,4 @@
++<changelist name="Uncommitted_changes_before_Checkout_at_10_10_2023_11_00_[Changes]" date="1696924835594" recycled="false" toDelete="true">
++  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_10_10_2023_11_00_[Changes]/shelved.patch" />
++  <option name="DESCRIPTION" value="Uncommitted changes before Checkout at 10.10.2023 11:00 [Changes]" />
++</changelist>
+\ No newline at end of file
+Index: src/test/java/tests/day06_actionsClass_FileTestleri/C05_facebookKayitTesti.java
+===================================================================
+diff --git a/src/test/java/tests/day06_actionsClass_FileTestleri/C05_facebookKayitTesti.java b/src/test/java/tests/day06_actionsClass_FileTestleri/C05_facebookKayitTesti.java
+new file mode 100644
+--- /dev/null	
++++ b/src/test/java/tests/day06_actionsClass_FileTestleri/C05_facebookKayitTesti.java	
+@@ -0,0 +1,52 @@
++package tests.day06_actionsClass_FileTestleri;
++
++import com.github.javafaker.Faker;
++import org.junit.AfterClass;
++import org.junit.Test;
++import org.openqa.selenium.By;
++import org.openqa.selenium.Keys;
++import org.openqa.selenium.WebElement;
++import org.openqa.selenium.interactions.Actions;
++import tests.utilities.TestBase;
++
++import java.security.Key;
++
++public class C05_facebookKayitTesti extends TestBase {
++    @Test
++    public void test01() throws InterruptedException {
++       //1- https://www.facebook.com adresine gidelim
++        driver.get("https://www.facebook.com");
++       //2- Cookies kabul edin
++       //3- Yeni hesap olustur butonuna basalim
++        driver.findElement(By.xpath("//*[@*='open-registration-form-button']")).click();
++       //4- Ad, soyad, mail ve sifre kutularina deger yazalim ve kaydol tusuna basalim
++        WebElement adınKutusu = driver.findElement(By.xpath("//*[@placeholder='Adın']"));
++        Actions actions = new Actions(driver);
++        Faker faker = new Faker();
++        String emailAdresi = faker.internet().emailAddress();
++        actions.click(adınKutusu)
++                .sendKeys(faker.name().firstName())
++                .sendKeys(Keys.TAB)
++                .sendKeys(faker.name().lastName())
++                .sendKeys(Keys.TAB)
++                .sendKeys(emailAdresi)
++                .sendKeys(Keys.TAB)
++                .sendKeys(emailAdresi)
++                .sendKeys(Keys.TAB)
++                .sendKeys(faker.internet().password())
++                .sendKeys(Keys.TAB)
++                .sendKeys(Keys.TAB)
++                .sendKeys("23")
++                .sendKeys(Keys.TAB)
++                .sendKeys("haz")
++                .sendKeys(Keys.TAB)
++                .sendKeys("2000")
++                .sendKeys(Keys.TAB).sendKeys(Keys.TAB).sendKeys(Keys.ARROW_RIGHT).perform();
++        Thread.sleep(7000);
++
++        //5- Kaydol tusuna basalim
++driver.findElement(By.xpath("//button[@name='websubmit']")).click();
++
++    }
++
++}
+Index: pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\"\n         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n         xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n    <modelVersion>4.0.0</modelVersion>\n\n    <groupId>org.example</groupId>\n    <artifactId>com.unityverse_Selenium</artifactId>\n    <version>1.0-SNAPSHOT</version>\n\n    <properties>\n        <maven.compiler.source>20</maven.compiler.source>\n        <maven.compiler.target>20</maven.compiler.target>\n        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>\n    </properties>\n\n    <dependencies>\n        <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->\n        <dependency>\n            <groupId>org.seleniumhq.selenium</groupId>\n            <artifactId>selenium-java</artifactId>\n            <version>4.11.0</version>\n        </dependency>\n\n        <!-- https://mvnrepository.com/artifact/io.github.bonigarcia/webdrivermanager -->\n        <dependency>\n            <groupId>io.github.bonigarcia</groupId>\n            <artifactId>webdrivermanager</artifactId>\n            <version>5.5.2</version>\n        </dependency>\n        <!-- https://mvnrepository.com/artifact/junit/junit -->\n        <dependency>\n            <groupId>junit</groupId>\n            <artifactId>junit</artifactId>\n            <version>4.13.2</version>\n            <scope>test</scope>\n        </dependency>\n\n    </dependencies>\n\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/pom.xml b/pom.xml
+--- a/pom.xml	
++++ b/pom.xml	
+@@ -35,6 +35,12 @@
+             <version>4.13.2</version>
+             <scope>test</scope>
+         </dependency>
++        <!-- https://mvnrepository.com/artifact/com.github.javafaker/javafaker -->
++        <dependency>
++            <groupId>com.github.javafaker</groupId>
++            <artifactId>javafaker</artifactId>
++            <version>1.0.2</version>
++        </dependency>
+ 
+     </dependencies>
+ 
+Index: .idea/shelf/Uncommitted_changes_before_Checkout_at_9_10_2023_11_55_[Changes]/shelved.patch
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Checkout_at_9_10_2023_11_55_[Changes]/shelved.patch b/.idea/shelf/Uncommitted_changes_before_Checkout_at_9_10_2023_11_55_[Changes]/shelved.patch
+new file mode 100644
+--- /dev/null	
++++ b/.idea/shelf/Uncommitted_changes_before_Checkout_at_9_10_2023_11_55_[Changes]/shelved.patch	
+@@ -0,0 +1,202 @@
++Index: .idea/workspace.xml
++IDEA additional info:
++Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
++<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"AutoImportSettings\">\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\n  </component>\n  <component name=\"ChangeListManager\">\n    <list default=\"true\" id=\"b77ea066-6ef9-4a06-a2f4-41ab9ed3a9ec\" name=\"Changes\" comment=\"JUnitStudies\">\n      <change afterPath=\"$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C01_Assertions.java\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C02_Assertions.java\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C03_Assertions.java\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C04_YoutubeAssertions.java\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C05_CheckBox.java\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C06_RadioButton.java\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C07_TestBaseKullanimiz.java\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C08_DropDownMenu.java\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/src/test/java/tests/day05_iFrame_JsAlert_Windows/C01_DropDownMenu.java\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/src/test/java/tests/day05_iFrame_JsAlert_Windows/C02_DropDownMenuTestCase2.java\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/src/test/java/tests/utilities/TestBase.java\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/src/test/java/tests/utilities/TestBaseClass.java\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\n    </list>\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\n  </component>\n  <component name=\"FileTemplateManagerImpl\">\n    <option name=\"RECENT_TEMPLATES\">\n      <list>\n        <option value=\"package-info\" />\n        <option value=\"Class\" />\n      </list>\n    </option>\n  </component>\n  <component name=\"Git.Merge.Settings\">\n    <option name=\"BRANCH\" value=\"origin/master\" />\n  </component>\n  <component name=\"Git.Settings\">\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\n      <map>\n        <entry key=\"$PROJECT_DIR$\" value=\"master\" />\n      </map>\n    </option>\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\n  </component>\n  <component name=\"GitHubPullRequestSearchHistory\">{\n  &quot;lastFilter&quot;: {\n    &quot;state&quot;: &quot;OPEN&quot;,\n    &quot;assignee&quot;: &quot;Dorleada&quot;\n  }\n}</component>\n  <component name=\"GithubPullRequestsUISettings\">\n    <option name=\"selectedUrlAndAccountId\">\n      <UrlAndAccount>\n        <option name=\"accountId\" value=\"0a8d9c29-4a4a-4ffb-90c7-88e77eda7e0f\" />\n        <option name=\"url\" value=\"https://github.com/Dorleada/SeleniumStudies.git\" />\n      </UrlAndAccount>\n    </option>\n  </component>\n  <component name=\"ProjectColorInfo\">{\n  &quot;associatedIndex&quot;: 7\n}</component>\n  <component name=\"ProjectId\" id=\"2W9n9t6fPCFasayyE9I9Resm48D\" />\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\">\n    <ConfirmationsSetting value=\"1\" id=\"Add\" />\n  </component>\n  <component name=\"ProjectViewState\">\n    <option name=\"showLibraryContents\" value=\"true\" />\n  </component>\n  <component name=\"PropertiesComponent\">{\n  &quot;keyToString&quot;: {\n    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\n    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,\n    &quot;git-widget-placeholder&quot;: &quot;Selenium&quot;\n  }\n}</component>\n  <component name=\"RunManager\" selected=\"JUnit.C02_DropDownMenuTestCase2.DDMTest\">\n    <configuration name=\"C01_DropDownMenu\" type=\"JUnit\" factoryName=\"JUnit\" temporary=\"true\" nameIsGenerated=\"true\">\n      <module name=\"com.unityverse_Selenium\" />\n      <extension name=\"coverage\">\n        <pattern>\n          <option name=\"PATTERN\" value=\"tests.day05_iFrame_JsAlert_Windows.*\" />\n          <option name=\"ENABLED\" value=\"true\" />\n        </pattern>\n      </extension>\n      <option name=\"PACKAGE_NAME\" value=\"tests.day05_iFrame_JsAlert_Windows\" />\n      <option name=\"MAIN_CLASS_NAME\" value=\"tests.day05_iFrame_JsAlert_Windows.C01_DropDownMenu\" />\n      <option name=\"TEST_OBJECT\" value=\"class\" />\n      <method v=\"2\">\n        <option name=\"Make\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <configuration name=\"C01_DropDownMenu.DDMTest01\" type=\"JUnit\" factoryName=\"JUnit\" temporary=\"true\" nameIsGenerated=\"true\">\n      <module name=\"com.unityverse_Selenium\" />\n      <extension name=\"coverage\">\n        <pattern>\n          <option name=\"PATTERN\" value=\"tests.day05_iFrame_JsAlert_Windows.*\" />\n          <option name=\"ENABLED\" value=\"true\" />\n        </pattern>\n      </extension>\n      <option name=\"PACKAGE_NAME\" value=\"tests.day05_iFrame_JsAlert_Windows\" />\n      <option name=\"MAIN_CLASS_NAME\" value=\"tests.day05_iFrame_JsAlert_Windows.C01_DropDownMenu\" />\n      <option name=\"METHOD_NAME\" value=\"DDMTest01\" />\n      <option name=\"TEST_OBJECT\" value=\"method\" />\n      <method v=\"2\">\n        <option name=\"Make\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <configuration name=\"C01_DropDownMenu.DDMTest02\" type=\"JUnit\" factoryName=\"JUnit\" temporary=\"true\" nameIsGenerated=\"true\">\n      <module name=\"com.unityverse_Selenium\" />\n      <extension name=\"coverage\">\n        <pattern>\n          <option name=\"PATTERN\" value=\"tests.day05_iFrame_JsAlert_Windows.*\" />\n          <option name=\"ENABLED\" value=\"true\" />\n        </pattern>\n      </extension>\n      <option name=\"PACKAGE_NAME\" value=\"tests.day05_iFrame_JsAlert_Windows\" />\n      <option name=\"MAIN_CLASS_NAME\" value=\"tests.day05_iFrame_JsAlert_Windows.C01_DropDownMenu\" />\n      <option name=\"METHOD_NAME\" value=\"DDMTest02\" />\n      <option name=\"TEST_OBJECT\" value=\"method\" />\n      <method v=\"2\">\n        <option name=\"Make\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <configuration name=\"C02_DropDownMenuTestCase2.DDMTest\" type=\"JUnit\" factoryName=\"JUnit\" temporary=\"true\" nameIsGenerated=\"true\">\n      <module name=\"com.unityverse_Selenium\" />\n      <extension name=\"coverage\">\n        <pattern>\n          <option name=\"PATTERN\" value=\"tests.day05_iFrame_JsAlert_Windows.*\" />\n          <option name=\"ENABLED\" value=\"true\" />\n        </pattern>\n      </extension>\n      <option name=\"PACKAGE_NAME\" value=\"tests.day05_iFrame_JsAlert_Windows\" />\n      <option name=\"MAIN_CLASS_NAME\" value=\"tests.day05_iFrame_JsAlert_Windows.C02_DropDownMenuTestCase2\" />\n      <option name=\"METHOD_NAME\" value=\"DDMTest\" />\n      <option name=\"TEST_OBJECT\" value=\"method\" />\n      <method v=\"2\">\n        <option name=\"Make\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <configuration name=\"C08_DropDownMenu.Test01\" type=\"JUnit\" factoryName=\"JUnit\" temporary=\"true\" nameIsGenerated=\"true\">\n      <module name=\"com.unityverse_Selenium\" />\n      <extension name=\"coverage\">\n        <pattern>\n          <option name=\"PATTERN\" value=\"tests.Day04_JunitFrameWork_DropDown.*\" />\n          <option name=\"ENABLED\" value=\"true\" />\n        </pattern>\n      </extension>\n      <option name=\"PACKAGE_NAME\" value=\"tests.Day04_JunitFrameWork_DropDown\" />\n      <option name=\"MAIN_CLASS_NAME\" value=\"tests.Day04_JunitFrameWork_DropDown.C08_DropDownMenu\" />\n      <option name=\"METHOD_NAME\" value=\"Test01\" />\n      <option name=\"TEST_OBJECT\" value=\"method\" />\n      <method v=\"2\">\n        <option name=\"Make\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <recent_temporary>\n      <list>\n        <item itemvalue=\"JUnit.C02_DropDownMenuTestCase2.DDMTest\" />\n        <item itemvalue=\"JUnit.C01_DropDownMenu\" />\n        <item itemvalue=\"JUnit.C01_DropDownMenu.DDMTest02\" />\n        <item itemvalue=\"JUnit.C08_DropDownMenu.Test01\" />\n        <item itemvalue=\"JUnit.C01_DropDownMenu.DDMTest01\" />\n      </list>\n    </recent_temporary>\n  </component>\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\n  <component name=\"TaskManager\">\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\n      <changelist id=\"b77ea066-6ef9-4a06-a2f4-41ab9ed3a9ec\" name=\"Changes\" comment=\"\" />\n      <created>1696153519118</created>\n      <option name=\"number\" value=\"Default\" />\n      <option name=\"presentableId\" value=\"Default\" />\n      <updated>1696153519118</updated>\n    </task>\n    <task id=\"LOCAL-00001\" summary=\"DriverStuides and FirstTest\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1696403959840</created>\n      <option name=\"number\" value=\"00001\" />\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1696403959840</updated>\n    </task>\n    <task id=\"LOCAL-00002\" summary=\"ManageMethodsStudies\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1696513093901</created>\n      <option name=\"number\" value=\"00002\" />\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1696513093901</updated>\n    </task>\n    <task id=\"LOCAL-00003\" summary=\"JUnitStudies\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1696513533495</created>\n      <option name=\"number\" value=\"00003\" />\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1696513533495</updated>\n    </task>\n    <option name=\"localTasksCounter\" value=\"4\" />\n    <servers />\n  </component>\n  <component name=\"Vcs.Log.Tabs.Properties\">\n    <option name=\"RECENT_FILTERS\">\n      <map>\n        <entry key=\"User\">\n          <value>\n            <list>\n              <RecentGroup>\n                <option name=\"FILTER_VALUES\">\n                  <option value=\"*\" />\n                </option>\n              </RecentGroup>\n            </list>\n          </value>\n        </entry>\n      </map>\n    </option>\n    <option name=\"TAB_STATES\">\n      <map>\n        <entry key=\"MAIN\">\n          <value>\n            <State />\n          </value>\n        </entry>\n      </map>\n    </option>\n  </component>\n  <component name=\"VcsManagerConfiguration\">\n    <MESSAGE value=\"DriverStuides and FirstTest\" />\n    <MESSAGE value=\"ManageMethodsStudies\" />\n    <MESSAGE value=\"JUnitStudies\" />\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"JUnitStudies\" />\n  </component>\n</project>
++Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
++<+>UTF-8
++===================================================================
++diff --git a/.idea/workspace.xml b/.idea/workspace.xml
++--- a/.idea/workspace.xml	
+++++ b/.idea/workspace.xml	
++@@ -4,20 +4,12 @@
++     <option name="autoReloadType" value="SELECTIVE" />
++   </component>
++   <component name="ChangeListManager">
++-    <list default="true" id="b77ea066-6ef9-4a06-a2f4-41ab9ed3a9ec" name="Changes" comment="JUnitStudies">
++-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C01_Assertions.java" afterDir="false" />
++-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C02_Assertions.java" afterDir="false" />
++-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C03_Assertions.java" afterDir="false" />
++-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C04_YoutubeAssertions.java" afterDir="false" />
++-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C05_CheckBox.java" afterDir="false" />
++-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C06_RadioButton.java" afterDir="false" />
+++    <list default="true" id="b77ea066-6ef9-4a06-a2f4-41ab9ed3a9ec" name="Changes" comment="DropDownMenuAutomationsStudies">
++       <change afterPath="$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C07_TestBaseKullanimiz.java" afterDir="false" />
++-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C08_DropDownMenu.java" afterDir="false" />
++-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/day05_iFrame_JsAlert_Windows/C01_DropDownMenu.java" afterDir="false" />
++-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/day05_iFrame_JsAlert_Windows/C02_DropDownMenuTestCase2.java" afterDir="false" />
++       <change afterPath="$PROJECT_DIR$/src/test/java/tests/utilities/TestBase.java" afterDir="false" />
++       <change afterPath="$PROJECT_DIR$/src/test/java/tests/utilities/TestBaseClass.java" afterDir="false" />
++       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+++      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
++     </list>
++     <option name="SHOW_DIALOG" value="false" />
++     <option name="HIGHLIGHT_CONFLICTS" value="true" />
++@@ -75,81 +67,80 @@
++     &quot;git-widget-placeholder&quot;: &quot;Selenium&quot;
++   }
++ }</component>
++-  <component name="RunManager" selected="JUnit.C02_DropDownMenuTestCase2.DDMTest">
++-    <configuration name="C01_DropDownMenu" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+++  <component name="RunManager" selected="JUnit.C05_facebookKayitTesti.test01">
+++    <configuration name="C02_ActionsDemoQA" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
++       <module name="com.unityverse_Selenium" />
++       <extension name="coverage">
++         <pattern>
++-          <option name="PATTERN" value="tests.day05_iFrame_JsAlert_Windows.*" />
+++          <option name="PATTERN" value="tests.day06_actionsClass_FileTestleri.*" />
++           <option name="ENABLED" value="true" />
++         </pattern>
++       </extension>
++-      <option name="PACKAGE_NAME" value="tests.day05_iFrame_JsAlert_Windows" />
++-      <option name="MAIN_CLASS_NAME" value="tests.day05_iFrame_JsAlert_Windows.C01_DropDownMenu" />
+++      <option name="PACKAGE_NAME" value="tests.day06_actionsClass_FileTestleri" />
+++      <option name="MAIN_CLASS_NAME" value="tests.day06_actionsClass_FileTestleri.C02_ActionsDemoQA" />
++       <option name="TEST_OBJECT" value="class" />
++       <method v="2">
++         <option name="Make" enabled="true" />
++       </method>
++     </configuration>
++-    <configuration name="C01_DropDownMenu.DDMTest01" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+++    <configuration name="C03_Actions.test01" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
++       <module name="com.unityverse_Selenium" />
++       <extension name="coverage">
++         <pattern>
++-          <option name="PATTERN" value="tests.day05_iFrame_JsAlert_Windows.*" />
+++          <option name="PATTERN" value="tests.day06_actionsClass_FileTestleri.*" />
++           <option name="ENABLED" value="true" />
++         </pattern>
++       </extension>
++-      <option name="PACKAGE_NAME" value="tests.day05_iFrame_JsAlert_Windows" />
++-      <option name="MAIN_CLASS_NAME" value="tests.day05_iFrame_JsAlert_Windows.C01_DropDownMenu" />
++-      <option name="METHOD_NAME" value="DDMTest01" />
+++      <option name="PACKAGE_NAME" value="tests.day06_actionsClass_FileTestleri" />
+++      <option name="MAIN_CLASS_NAME" value="tests.day06_actionsClass_FileTestleri.C03_Actions" />
+++      <option name="METHOD_NAME" value="test01" />
++       <option name="TEST_OBJECT" value="method" />
++       <method v="2">
++         <option name="Make" enabled="true" />
++       </method>
++     </configuration>
++-    <configuration name="C01_DropDownMenu.DDMTest02" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+++    <configuration name="C04_keyboardActions.tset01" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
++       <module name="com.unityverse_Selenium" />
++       <extension name="coverage">
++         <pattern>
++-          <option name="PATTERN" value="tests.day05_iFrame_JsAlert_Windows.*" />
+++          <option name="PATTERN" value="tests.day06_actionsClass_FileTestleri.*" />
++           <option name="ENABLED" value="true" />
++         </pattern>
++       </extension>
++-      <option name="PACKAGE_NAME" value="tests.day05_iFrame_JsAlert_Windows" />
++-      <option name="MAIN_CLASS_NAME" value="tests.day05_iFrame_JsAlert_Windows.C01_DropDownMenu" />
++-      <option name="METHOD_NAME" value="DDMTest02" />
+++      <option name="PACKAGE_NAME" value="tests.day06_actionsClass_FileTestleri" />
+++      <option name="MAIN_CLASS_NAME" value="tests.day06_actionsClass_FileTestleri.C04_keyboardActions" />
+++      <option name="METHOD_NAME" value="tset01" />
++       <option name="TEST_OBJECT" value="method" />
++       <method v="2">
++         <option name="Make" enabled="true" />
++       </method>
++     </configuration>
++-    <configuration name="C02_DropDownMenuTestCase2.DDMTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+++    <configuration name="C05_facebookKayitTesti" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
++       <module name="com.unityverse_Selenium" />
++       <extension name="coverage">
++         <pattern>
++-          <option name="PATTERN" value="tests.day05_iFrame_JsAlert_Windows.*" />
+++          <option name="PATTERN" value="tests.day06_actionsClass_FileTestleri.*" />
++           <option name="ENABLED" value="true" />
++         </pattern>
++       </extension>
++-      <option name="PACKAGE_NAME" value="tests.day05_iFrame_JsAlert_Windows" />
++-      <option name="MAIN_CLASS_NAME" value="tests.day05_iFrame_JsAlert_Windows.C02_DropDownMenuTestCase2" />
++-      <option name="METHOD_NAME" value="DDMTest" />
++-      <option name="TEST_OBJECT" value="method" />
+++      <option name="PACKAGE_NAME" value="tests.day06_actionsClass_FileTestleri" />
+++      <option name="MAIN_CLASS_NAME" value="tests.day06_actionsClass_FileTestleri.C05_facebookKayitTesti" />
+++      <option name="TEST_OBJECT" value="class" />
++       <method v="2">
++         <option name="Make" enabled="true" />
++       </method>
++     </configuration>
++-    <configuration name="C08_DropDownMenu.Test01" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+++    <configuration name="C05_facebookKayitTesti.test01" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
++       <module name="com.unityverse_Selenium" />
++       <extension name="coverage">
++         <pattern>
++-          <option name="PATTERN" value="tests.Day04_JunitFrameWork_DropDown.*" />
+++          <option name="PATTERN" value="tests.day06_actionsClass_FileTestleri.*" />
++           <option name="ENABLED" value="true" />
++         </pattern>
++       </extension>
++-      <option name="PACKAGE_NAME" value="tests.Day04_JunitFrameWork_DropDown" />
++-      <option name="MAIN_CLASS_NAME" value="tests.Day04_JunitFrameWork_DropDown.C08_DropDownMenu" />
++-      <option name="METHOD_NAME" value="Test01" />
+++      <option name="PACKAGE_NAME" value="tests.day06_actionsClass_FileTestleri" />
+++      <option name="MAIN_CLASS_NAME" value="tests.day06_actionsClass_FileTestleri.C05_facebookKayitTesti" />
+++      <option name="METHOD_NAME" value="test01" />
++       <option name="TEST_OBJECT" value="method" />
++       <method v="2">
++         <option name="Make" enabled="true" />
++@@ -157,11 +148,11 @@
++     </configuration>
++     <recent_temporary>
++       <list>
++-        <item itemvalue="JUnit.C02_DropDownMenuTestCase2.DDMTest" />
++-        <item itemvalue="JUnit.C01_DropDownMenu" />
++-        <item itemvalue="JUnit.C01_DropDownMenu.DDMTest02" />
++-        <item itemvalue="JUnit.C08_DropDownMenu.Test01" />
++-        <item itemvalue="JUnit.C01_DropDownMenu.DDMTest01" />
+++        <item itemvalue="JUnit.C05_facebookKayitTesti.test01" />
+++        <item itemvalue="JUnit.C05_facebookKayitTesti" />
+++        <item itemvalue="JUnit.C04_keyboardActions.tset01" />
+++        <item itemvalue="JUnit.C03_Actions.test01" />
+++        <item itemvalue="JUnit.C02_ActionsDemoQA" />
++       </list>
++     </recent_temporary>
++   </component>
++@@ -198,7 +189,31 @@
++       <option name="project" value="LOCAL" />
++       <updated>1696513533495</updated>
++     </task>
++-    <option name="localTasksCounter" value="4" />
+++    <task id="LOCAL-00004" summary="AssertionsStudies">
+++      <option name="closed" value="true" />
+++      <created>1696596212511</created>
+++      <option name="number" value="00004" />
+++      <option name="presentableId" value="LOCAL-00004" />
+++      <option name="project" value="LOCAL" />
+++      <updated>1696596212511</updated>
+++    </task>
+++    <task id="LOCAL-00005" summary="JUnitStudies">
+++      <option name="closed" value="true" />
+++      <created>1696674598425</created>
+++      <option name="number" value="00005" />
+++      <option name="presentableId" value="LOCAL-00005" />
+++      <option name="project" value="LOCAL" />
+++      <updated>1696674598425</updated>
+++    </task>
+++    <task id="LOCAL-00006" summary="DropDownMenuAutomationsStudies">
+++      <option name="closed" value="true" />
+++      <created>1696755997636</created>
+++      <option name="number" value="00006" />
+++      <option name="presentableId" value="LOCAL-00006" />
+++      <option name="project" value="LOCAL" />
+++      <updated>1696755997636</updated>
+++    </task>
+++    <option name="localTasksCounter" value="7" />
++     <servers />
++   </component>
++   <component name="Vcs.Log.Tabs.Properties">
++@@ -230,7 +245,9 @@
++   <component name="VcsManagerConfiguration">
++     <MESSAGE value="DriverStuides and FirstTest" />
++     <MESSAGE value="ManageMethodsStudies" />
+++    <MESSAGE value="AssertionsStudies" />
++     <MESSAGE value="JUnitStudies" />
++-    <option name="LAST_COMMIT_MESSAGE" value="JUnitStudies" />
+++    <MESSAGE value="DropDownMenuAutomationsStudies" />
+++    <option name="LAST_COMMIT_MESSAGE" value="DropDownMenuAutomationsStudies" />
++   </component>
++ </project>
++\ No newline at end of file
+Index: .idea/shelf/Uncommitted_changes_before_Update_at_9_10_2023_11_56_[Changes]/shelved.patch
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Update_at_9_10_2023_11_56_[Changes]/shelved.patch b/.idea/shelf/Uncommitted_changes_before_Update_at_9_10_2023_11_56_[Changes]/shelved.patch
+new file mode 100644
+--- /dev/null	
++++ b/.idea/shelf/Uncommitted_changes_before_Update_at_9_10_2023_11_56_[Changes]/shelved.patch	
+@@ -0,0 +1,483 @@
++Index: src/test/java/tests/day05_iFrame_JsAlert_Windows/C06_cokluPencereKullanimi.java
++IDEA additional info:
++Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
++<+>UTF-8
++===================================================================
++diff --git a/src/test/java/tests/day05_iFrame_JsAlert_Windows/C06_cokluPencereKullanimi.java b/src/test/java/tests/day05_iFrame_JsAlert_Windows/C06_cokluPencereKullanimi.java
++new file mode 100644
++--- /dev/null	(date 1696841714785)
+++++ b/src/test/java/tests/day05_iFrame_JsAlert_Windows/C06_cokluPencereKullanimi.java	(date 1696841714785)
++@@ -0,0 +1,60 @@
+++package tests.day05_iFrame_JsAlert_Windows;
+++
+++import org.junit.Assert;
+++import org.junit.Test;
+++import org.openqa.selenium.By;
+++import org.openqa.selenium.WindowType;
+++import tests.utilities.TestBase;
+++
+++public class C06_cokluPencereKullanimi  extends TestBase {
+++    @Test
+++    public void test01() throws InterruptedException {
+++        driver.get("https:amazon.com");
+++        String ilkSayfaWhd = driver.getWindowHandle();
+++        System.out.println(driver.getWindowHandle());//71C8F24C68E5E10F25D6300BC7D14567
+++        System.out.println(driver.getWindowHandles());//[71C8F24C68E5E10F25D6300BC7D14567]
+++
+++        // yeni bir tab acarak youtube gidelim
+++
+++        driver.switchTo().newWindow(WindowType.TAB);
+++        Thread.sleep(3000);
+++        driver.get("https:youtube.com");
+++String ikinciSayfaWhd = driver.getWindowHandle();
+++        System.out.println(driver.getWindowHandle());//F385CE231D827554A3B33D0FFD834684
+++        System.out.println(driver.getWindowHandles());//[2575ACA06120BBAB201C3B64A673729C, F385CE231D827554A3B33D0FFD834684]
+++        Thread.sleep(3000);
+++
+++
+++
+++        // yeni bir tab acarak arabam.com gidelim
+++        driver.switchTo().newWindow(WindowType.TAB).get("https:arabam.com");
+++        String ucuncuSayfaWhd = driver.getWindowHandle();
+++        System.out.println(driver.getWindowHandle());
+++        System.out.println(driver.getWindowHandles());//[C918224F943E2B6586DD0744F197CDB2, CEF84E51765E7C871050ACDDB160C852, 00D051A5B2C0530C99B48D42CFAC3E92]
+++        Thread.sleep(3000);
+++
+++
+++
+++
+++        //amazonun acik oldgugu sayfaya gidin
+++        //ve title'in amazon oldugunu test edin
+++        // an itibariyle driverimiz arabam.com oldugu sayfada
+++        //gecis icin amazon'un acik oldugu sayfanin window handle degerine ihtiyacimiz var
+++        driver.switchTo().window(ilkSayfaWhd);
+++        String expectedTitle = "Amazon";
+++        String actualTitle = driver.getTitle();
+++        Assert.assertTrue(actualTitle.contains(expectedTitle));
+++        //youtube'in  acşk oldugu sayfaya gidin
+++        // ve url'in youtube icerdigini test edin
+++        driver.switchTo().window(ikinciSayfaWhd);
+++        String expectedUrl = "youtube";
+++        String actualurl = driver.getCurrentUrl();
+++        Assert.assertTrue(actualurl.contains(expectedUrl));
+++        //arabam.com'un acik oldugu sayfaya gidin
+++        // ve logonun gorundugunu test edin
+++        driver.switchTo().window(ucuncuSayfaWhd);
+++        driver.findElement(By.xpath("//*[text()='Kabul Et']")).click();
+++        Assert.assertTrue(driver.findElement(By.xpath("//*[@alt='arabam.com']")).isDisplayed());
+++
+++    }
+++}
++Index: src/test/java/tests/day05_iFrame_JsAlert_Windows/C07_KontrolsuzCOkluPencere.java
++IDEA additional info:
++Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
++<+>UTF-8
++===================================================================
++diff --git a/src/test/java/tests/day05_iFrame_JsAlert_Windows/C07_KontrolsuzCOkluPencere.java b/src/test/java/tests/day05_iFrame_JsAlert_Windows/C07_KontrolsuzCOkluPencere.java
++new file mode 100644
++--- /dev/null	(date 1696841733337)
+++++ b/src/test/java/tests/day05_iFrame_JsAlert_Windows/C07_KontrolsuzCOkluPencere.java	(date 1696841733337)
++@@ -0,0 +1,53 @@
+++package tests.day05_iFrame_JsAlert_Windows;
+++
+++import org.junit.Assert;
+++import org.junit.Test;
+++import org.openqa.selenium.By;
+++import org.openqa.selenium.WebElement;
+++import tests.utilities.TestBase;
+++import java.util.Set;
+++public class C07_KontrolsuzCOkluPencere extends TestBase{
+++
+++// https://the-internet.herokuapp.com/windows adresine gidin.
+++//           ● Sayfadaki textin “Opening a new window” olduğunu doğrulayın.
+++//           ● Sayfa başlığının(title) “The Internet” olduğunu doğrulayın.
+++//           ● Click Here butonuna basın.
+++//           ● Acilan yeni pencerenin sayfa başlığının (title) “New Window” oldugunu dogrulayin.
+++//           ● Sayfadaki textin “New Window” olduğunu doğrulayın.
+++//           ● Bir önceki pencereye geri döndükten sonra sayfa başlığının “The Internet” olduğunu doğrulayın.
+++
+++    @Test
+++    public void test1(){
+++// https://the-internet.herokuapp.com/windows adresine gidin.
+++        driver.get("https://the-internet.herokuapp.com/windows");
+++        String ilkSayfaWhd = driver.getWindowHandle();
+++//           ● Sayfadaki textin “Opening a new window” olduğunu doğrulayın.
+++String expectedIcerik = "Opening a new window";
+++String actualIcerik = driver.findElement(By.tagName("h3")).getText();
+++        Assert.assertEquals(expectedIcerik,actualIcerik);
+++//           ● Sayfa başlığının(title) “The Internet” olduğunu doğrulayın.
+++        String expectedIcerik2 = "The Internet";
+++        String actualTitle2 = driver.getTitle();
+++        Assert.assertEquals(expectedIcerik2,actualTitle2);
+++//           ● Click Here butonuna basın.
+++
+++        driver.findElement(By.linkText("Click Here")).click();
+++        Set<String> Whds = driver.getWindowHandles();
+++        String ikinciSayfaWhd = "";
+++        for (String each:Whds
+++             ) {
+++            if(!ilkSayfaWhd.equals(each)) ikinciSayfaWhd = each;
+++        }
+++        driver.switchTo().window(ikinciSayfaWhd);
+++//           ● Acilan yeni pencerenin sayfa başlığının (title) “New Window” oldugunu dogrulayin.
+++String  yeniTitle = driver.getTitle();
+++String expectedNewTitle = "New Window";
+++Assert.assertEquals(yeniTitle,expectedNewTitle);
+++//           ● Sayfadaki textin “New Window” olduğunu doğrulayın.
+++ String newText = driver.findElement(By.tagName("h3")).getText();
+++   Assert.assertEquals(newText,expectedNewTitle);
+++//           ● Bir önceki pencereye geri döndükten sonra sayfa başlığının “The Internet” olduğunu doğrulayın.
+++driver.switchTo().window(ilkSayfaWhd);
+++        Assert.assertEquals(expectedIcerik2,actualTitle2);
+++    }
+++}
++Index: src/test/java/tests/day06_actionsClass_FileTestleri/C01_actionClass.java
++IDEA additional info:
++Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
++<+>UTF-8
++===================================================================
++diff --git a/src/test/java/tests/day06_actionsClass_FileTestleri/C01_actionClass.java b/src/test/java/tests/day06_actionsClass_FileTestleri/C01_actionClass.java
++new file mode 100644
++--- /dev/null	(date 1696841733352)
+++++ b/src/test/java/tests/day06_actionsClass_FileTestleri/C01_actionClass.java	(date 1696841733352)
++@@ -0,0 +1,43 @@
+++package tests.day06_actionsClass_FileTestleri;
+++
+++import org.junit.Assert;
+++import org.junit.Test;
+++import org.openqa.selenium.By;
+++import org.openqa.selenium.WebElement;
+++import org.openqa.selenium.interactions.Actions;
+++import tests.utilities.TestBase;
+++
+++import javax.swing.*;
+++import java.util.Set;
+++
+++public class C01_actionClass extends TestBase {
+++    @Test
+++    public void test01() {
+++//    2- https://the-internet.herokuapp.com/context_menu sitesine gidin
+++        driver.get("https://the-internet.herokuapp.com/context_menu");
+++       String firstWHD = driver.getWindowHandle();
+++//            3- Cizili alan uzerinde sag click yapin
+++        Actions actions = new Actions(driver);
+++        WebElement basılacakKutu = driver.findElement(By.id("hot-spot"));
+++        actions.contextClick(basılacakKutu).perform();
+++//4- Alert’te cikan yazinin “You selected a context menu” oldugunu test edin.
+++        String expectedYazi = "You selected a context menu";
+++        String actualYazi = driver.switchTo().alert().getText();
+++        Assert.assertEquals(expectedYazi,actualYazi);
+++//5- Tamam diyerek alert’i kapatalim
+++        driver.switchTo().alert().accept();
+++//6- Elemental Selenium linkine tiklayalim
+++      driver.findElement(By.linkText("Elemental Selenium")).click();
+++        Set<String> WHDS = driver.getWindowHandles();
+++        String secondWHD = "";
+++        for (String each: WHDS
+++             ) {
+++            if(!firstWHD.equals(each)) secondWHD = each;
+++        }
+++        driver.switchTo().window(secondWHD);
+++//7- Acilan sayfada h1 taginda “Make sure your code lands” yazdigini test edelim
+++String expectedHeader = "Make sure your code lands";
+++String actualHeader = driver.findElement(By.className("home-header")).getText();
+++Assert.assertEquals(expectedHeader,actualHeader);
+++    }
+++}
++\ No newline at end of file
++Index: pom.xml
++IDEA additional info:
++Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
++<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\"\n         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n         xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n    <modelVersion>4.0.0</modelVersion>\n\n    <groupId>org.example</groupId>\n    <artifactId>com.unityverse_Selenium</artifactId>\n    <version>1.0-SNAPSHOT</version>\n\n    <properties>\n        <maven.compiler.source>20</maven.compiler.source>\n        <maven.compiler.target>20</maven.compiler.target>\n        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>\n    </properties>\n\n    <dependencies>\n        <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->\n        <dependency>\n            <groupId>org.seleniumhq.selenium</groupId>\n            <artifactId>selenium-java</artifactId>\n            <version>4.11.0</version>\n        </dependency>\n\n        <!-- https://mvnrepository.com/artifact/io.github.bonigarcia/webdrivermanager -->\n        <dependency>\n            <groupId>io.github.bonigarcia</groupId>\n            <artifactId>webdrivermanager</artifactId>\n            <version>5.5.2</version>\n        </dependency>\n        <!-- https://mvnrepository.com/artifact/junit/junit -->\n        <dependency>\n            <groupId>junit</groupId>\n            <artifactId>junit</artifactId>\n            <version>4.13.2</version>\n            <scope>test</scope>\n        </dependency>\n\n    </dependencies>\n\n</project>
++Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
++<+>UTF-8
++===================================================================
++diff --git a/pom.xml b/pom.xml
++--- a/pom.xml	(revision 54234d95dfde1f172dba08e034b697ad8dceb9e6)
+++++ b/pom.xml	(date 1696841714745)
++@@ -35,6 +35,12 @@
++             <version>4.13.2</version>
++             <scope>test</scope>
++         </dependency>
+++        <!-- https://mvnrepository.com/artifact/com.github.javafaker/javafaker -->
+++        <dependency>
+++            <groupId>com.github.javafaker</groupId>
+++            <artifactId>javafaker</artifactId>
+++            <version>1.0.2</version>
+++        </dependency>
++ 
++     </dependencies>
++ 
++Index: src/test/java/tests/day06_actionsClass_FileTestleri/C02_ActionsDemoQA.java
++IDEA additional info:
++Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
++<+>UTF-8
++===================================================================
++diff --git a/src/test/java/tests/day06_actionsClass_FileTestleri/C02_ActionsDemoQA.java b/src/test/java/tests/day06_actionsClass_FileTestleri/C02_ActionsDemoQA.java
++new file mode 100644
++--- /dev/null	(date 1696841733346)
+++++ b/src/test/java/tests/day06_actionsClass_FileTestleri/C02_ActionsDemoQA.java	(date 1696841733346)
++@@ -0,0 +1,27 @@
+++package tests.day06_actionsClass_FileTestleri;
+++
+++import org.junit.Assert;
+++import org.junit.Test;
+++import org.openqa.selenium.By;
+++import org.openqa.selenium.WebElement;
+++import org.openqa.selenium.interactions.Actions;
+++import tests.utilities.TestBase;
+++
+++import java.nio.file.WatchEvent;
+++
+++public class C02_ActionsDemoQA extends TestBase {
+++    @Test
+++    public void DragMeAndDropHere (){
+++      //  1- https://demoqa.com/droppable adresine gidelim
+++        driver.get("https://demoqa.com/droppable");
+++      //  2- “Drag me” butonunu tutup “Drop here” kutusunun ustune birakalim
+++        WebElement dragME = driver.findElement(By.xpath("//*[text()='Drag me']"));
+++        Actions actions = new Actions(driver);
+++        WebElement dropHere = driver.findElement(By.xpath("//*[text()='Drop here']"));
+++      actions.dragAndDrop(dragME,dropHere).perform();
+++      //  3- “Drop here” yazisi yerine “Dropped!” oldugunu test edin
+++        String expectedIcerik = "Dropped!";
+++        String actualIcerik = driver.findElement(By.xpath("//*[text()='Dropped!']")).getText();
+++        Assert.assertEquals(expectedIcerik,actualIcerik);
+++    }
+++}
++Index: src/test/java/tests/day06_actionsClass_FileTestleri/C03_Actions.java
++IDEA additional info:
++Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
++<+>UTF-8
++===================================================================
++diff --git a/src/test/java/tests/day06_actionsClass_FileTestleri/C03_Actions.java b/src/test/java/tests/day06_actionsClass_FileTestleri/C03_Actions.java
++new file mode 100644
++--- /dev/null	(date 1696841733370)
+++++ b/src/test/java/tests/day06_actionsClass_FileTestleri/C03_Actions.java	(date 1696841733370)
++@@ -0,0 +1,28 @@
+++package tests.day06_actionsClass_FileTestleri;
+++
+++import org.junit.Assert;
+++import org.junit.Test;
+++import org.openqa.selenium.By;
+++import org.openqa.selenium.WebElement;
+++import org.openqa.selenium.devtools.v85.network.model.DataReceived;
+++import org.openqa.selenium.interactions.Actions;
+++import tests.utilities.TestBase;
+++
+++public class C03_Actions extends TestBase {
+++    @Test
+++    public void test01(){
+++       // 1- https://www.amazon.com/ adresine gidin
+++        driver.get("https://www.amazon.com/");
+++       // 2- Sag ust bolumde bulunan “Account & Lists” menusunun acilmasi icin mouse’u bu menunun ustune getirin
+++        Actions actions = new Actions(driver);
+++        WebElement accountsButton = driver.findElement(By.xpath("//*[text()='Account & Lists']"));
+++        actions.moveToElement(accountsButton).perform();
+++       // 3- “Create a list” butonuna basin
+++    driver.findElement(By.xpath("//*[text()='Create a List']")).click();
+++       // 4- Acilan sayfada “Your Lists” yazisi oldugunu test edin
+++        String expectedHeader = "Your Lists";
+++        String actualIcerik = driver.findElement(By.xpath("//*[text()='Your Lists']")).getText();
+++        Assert.assertEquals(expectedHeader,actualIcerik);
+++
+++    }
+++}
++Index: src/test/java/tests/day06_actionsClass_FileTestleri/C04_keyboardActions.java
++IDEA additional info:
++Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
++<+>UTF-8
++===================================================================
++diff --git a/src/test/java/tests/day06_actionsClass_FileTestleri/C04_keyboardActions.java b/src/test/java/tests/day06_actionsClass_FileTestleri/C04_keyboardActions.java
++new file mode 100644
++--- /dev/null	(date 1696841733365)
+++++ b/src/test/java/tests/day06_actionsClass_FileTestleri/C04_keyboardActions.java	(date 1696841733365)
++@@ -0,0 +1,40 @@
+++package tests.day06_actionsClass_FileTestleri;
+++
+++import net.bytebuddy.implementation.bytecode.ShiftLeft;
+++import org.junit.Assert;
+++import org.junit.Test;
+++import org.openqa.selenium.By;
+++import org.openqa.selenium.Keys;
+++import org.openqa.selenium.WebElement;
+++import org.openqa.selenium.interactions.Actions;
+++import tests.utilities.TestBase;
+++
+++import java.time.format.DateTimeFormatter;
+++
+++public class C04_keyboardActions extends TestBase {
+++
+++    @Test
+++    public void tset01(){
+++        //1- Bir Class olusturalim KeyboardActions1
+++//2- https://www.amazon.com sayfasina gidelim
+++        driver.get("https://www.amazon.com");
+++//3- Arama kutusuna actions method’larini kullanarak Samsung A71 yazdirin ve Enter’a basarak arama yaptirin
+++        WebElement aramaKutusu = driver.findElement(By.id("twotabsearchtextbox"));
+++        Actions actions = new Actions(driver);
+++        actions.click(aramaKutusu)
+++                .keyDown(Keys.SHIFT)
+++                .sendKeys("s")
+++                .keyUp(Keys.SHIFT)
+++                .sendKeys("amsung ")
+++                .keyDown(Keys.SHIFT)
+++                .sendKeys("a")
+++                .keyUp(Keys.SHIFT)
+++                .sendKeys("71" + Keys.ENTER).perform();
+++//4- aramanin gerceklestigini test edin
+++        WebElement sonucElementi = driver.findElement(By.xpath("//div[@class='a-section a-spacing-small a-spacing-top-small']"));
+++        String expectedIcerik = "Samsung A71";
+++        String actualIcerik = sonucElementi.getText();
+++
+++        Assert.assertTrue(actualIcerik.contains(expectedIcerik));
+++    }
+++}
++Index: src/test/java/tests/day06_actionsClass_FileTestleri/C05_facebookKayitTesti.java
++IDEA additional info:
++Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
++<+>UTF-8
++===================================================================
++diff --git a/src/test/java/tests/day06_actionsClass_FileTestleri/C05_facebookKayitTesti.java b/src/test/java/tests/day06_actionsClass_FileTestleri/C05_facebookKayitTesti.java
++new file mode 100644
++--- /dev/null	(date 1696841733376)
+++++ b/src/test/java/tests/day06_actionsClass_FileTestleri/C05_facebookKayitTesti.java	(date 1696841733376)
++@@ -0,0 +1,52 @@
+++package tests.day06_actionsClass_FileTestleri;
+++
+++import com.github.javafaker.Faker;
+++import org.junit.AfterClass;
+++import org.junit.Test;
+++import org.openqa.selenium.By;
+++import org.openqa.selenium.Keys;
+++import org.openqa.selenium.WebElement;
+++import org.openqa.selenium.interactions.Actions;
+++import tests.utilities.TestBase;
+++
+++import java.security.Key;
+++
+++public class C05_facebookKayitTesti extends TestBase {
+++    @Test
+++    public void test01() throws InterruptedException {
+++       //1- https://www.facebook.com adresine gidelim
+++        driver.get("https://www.facebook.com");
+++       //2- Cookies kabul edin
+++       //3- Yeni hesap olustur butonuna basalim
+++        driver.findElement(By.xpath("//*[@*='open-registration-form-button']")).click();
+++       //4- Ad, soyad, mail ve sifre kutularina deger yazalim ve kaydol tusuna basalim
+++        WebElement adınKutusu = driver.findElement(By.xpath("//*[@placeholder='Adın']"));
+++        Actions actions = new Actions(driver);
+++        Faker faker = new Faker();
+++        String emailAdresi = faker.internet().emailAddress();
+++        actions.click(adınKutusu)
+++                .sendKeys(faker.name().firstName())
+++                .sendKeys(Keys.TAB)
+++                .sendKeys(faker.name().lastName())
+++                .sendKeys(Keys.TAB)
+++                .sendKeys(emailAdresi)
+++                .sendKeys(Keys.TAB)
+++                .sendKeys(emailAdresi)
+++                .sendKeys(Keys.TAB)
+++                .sendKeys(faker.internet().password())
+++                .sendKeys(Keys.TAB)
+++                .sendKeys(Keys.TAB)
+++                .sendKeys("23")
+++                .sendKeys(Keys.TAB)
+++                .sendKeys("haz")
+++                .sendKeys(Keys.TAB)
+++                .sendKeys("2000")
+++                .sendKeys(Keys.TAB).sendKeys(Keys.TAB).sendKeys(Keys.ARROW_RIGHT).perform();
+++        Thread.sleep(7000);
+++
+++        //5- Kaydol tusuna basalim
+++driver.findElement(By.xpath("//button[@name='websubmit']")).click();
+++
+++    }
+++
+++}
++Index: src/test/java/tests/utilities/TestBaseClass.java
++IDEA additional info:
++Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
++<+>UTF-8
++===================================================================
++diff --git a/src/test/java/tests/utilities/TestBaseClass.java b/src/test/java/tests/utilities/TestBaseClass.java
++new file mode 100644
++--- /dev/null	(date 1696841733387)
+++++ b/src/test/java/tests/utilities/TestBaseClass.java	(date 1696841733387)
++@@ -0,0 +1,28 @@
+++package tests.utilities;
+++
+++import io.github.bonigarcia.wdm.WebDriverManager;
+++import org.junit.After;
+++import org.junit.AfterClass;
+++import org.junit.Before;
+++import org.junit.BeforeClass;
+++import org.openqa.selenium.WebDriver;
+++import org.openqa.selenium.chrome.ChromeDriver;
+++
+++import java.time.Duration;
+++
+++public class TestBaseClass {
+++    public static WebDriver driver;
+++    @BeforeClass
+++    public static void setUp(){
+++        driver = new ChromeDriver();
+++        WebDriverManager.chromedriver().setup();
+++        driver.manage().window().maximize();
+++        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
+++        driver.get("https://the-internet.herokuapp.com/javascript_alerts ");
+++    }
+++    @AfterClass
+++    public static void tearDown() throws InterruptedException {
+++        Thread.sleep(3000);
+++        driver.close();
+++    }
+++}
++Index: src/test/java/tests/Day04_JunitFrameWork_DropDown/C07_TestBaseKullanimiz.java
++IDEA additional info:
++Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
++<+>UTF-8
++===================================================================
++diff --git a/src/test/java/tests/Day04_JunitFrameWork_DropDown/C07_TestBaseKullanimiz.java b/src/test/java/tests/Day04_JunitFrameWork_DropDown/C07_TestBaseKullanimiz.java
++new file mode 100644
++--- /dev/null	(date 1696841733381)
+++++ b/src/test/java/tests/Day04_JunitFrameWork_DropDown/C07_TestBaseKullanimiz.java	(date 1696841733381)
++@@ -0,0 +1,38 @@
+++package tests.Day04_JunitFrameWork_DropDown;
+++
+++import org.junit.Assert;
+++import org.junit.Test;
+++import org.openqa.selenium.By;
+++import org.openqa.selenium.Keys;
+++import org.openqa.selenium.WebElement;
+++import tests.utilities.TestBase;
+++
+++public class C07_TestBaseKullanimiz  extends TestBase{
+++
+++    /*
+++
+++    extends keyword
+++    icinde oldugumu C07 class'ini
+++    TestBase class'inin child class'i yapar
+++bu sayede C07 class'indan TestBase class'indaki
+++tum variable ve method'lari DIREKT kullanabiliriz
+++(static keyword'e dikkat etmek gerekir)
+++     */
+++@Test
+++    public void amazonTest(){
+++
+++    // Amazon anasayfaya gidin
+++    driver.get("https:amazon.com");
+++
+++
+++    //Nutella icin arama yapin
+++    WebElement aramaKutusu = driver.findElement(By.id("twotabsearchtextbox"));
+++    aramaKutusu.sendKeys("nutella"+ Keys.ENTER);
+++
+++    //Arama sonuclarinin Nutlella icerdigini test edin
+++WebElement nutellaArmasonucu = driver.findElement(By.xpath("//*[@class='a-section a-spacing-small a-spacing-top-small']"));
+++String actualSonucYazisi = nutellaArmasonucu.getText();
+++String expectedIcerik = "nutella";
+++    Assert.assertTrue(actualSonucYazisi.contains(expectedIcerik));
+++}
+++}
+Index: .idea/shelf/Uncommitted_changes_before_Checkout_at_9_10_2023_11_55_[Changes]1/shelved.patch
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Checkout_at_9_10_2023_11_55_[Changes]1/shelved.patch b/.idea/shelf/Uncommitted_changes_before_Checkout_at_9_10_2023_11_55_[Changes]1/shelved.patch
+new file mode 100644
+--- /dev/null	
++++ b/.idea/shelf/Uncommitted_changes_before_Checkout_at_9_10_2023_11_55_[Changes]1/shelved.patch	
+@@ -0,0 +1,518 @@
++Index: pom.xml
++IDEA additional info:
++Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
++<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\"\n         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n         xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n    <modelVersion>4.0.0</modelVersion>\n\n    <groupId>org.example</groupId>\n    <artifactId>com.unityverse_Selenium</artifactId>\n    <version>1.0-SNAPSHOT</version>\n\n    <properties>\n        <maven.compiler.source>20</maven.compiler.source>\n        <maven.compiler.target>20</maven.compiler.target>\n        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>\n    </properties>\n\n    <dependencies>\n        <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->\n        <dependency>\n            <groupId>org.seleniumhq.selenium</groupId>\n            <artifactId>selenium-java</artifactId>\n            <version>4.11.0</version>\n        </dependency>\n\n        <!-- https://mvnrepository.com/artifact/io.github.bonigarcia/webdrivermanager -->\n        <dependency>\n            <groupId>io.github.bonigarcia</groupId>\n            <artifactId>webdrivermanager</artifactId>\n            <version>5.5.2</version>\n        </dependency>\n        <!-- https://mvnrepository.com/artifact/junit/junit -->\n        <dependency>\n            <groupId>junit</groupId>\n            <artifactId>junit</artifactId>\n            <version>4.13.2</version>\n            <scope>test</scope>\n        </dependency>\n\n    </dependencies>\n\n</project>
++Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
++<+>UTF-8
++===================================================================
++diff --git a/pom.xml b/pom.xml
++--- a/pom.xml	
+++++ b/pom.xml	
++@@ -35,6 +35,12 @@
++             <version>4.13.2</version>
++             <scope>test</scope>
++         </dependency>
+++        <!-- https://mvnrepository.com/artifact/com.github.javafaker/javafaker -->
+++        <dependency>
+++            <groupId>com.github.javafaker</groupId>
+++            <artifactId>javafaker</artifactId>
+++            <version>1.0.2</version>
+++        </dependency>
++ 
++     </dependencies>
++ 
++Index: src/test/java/tests/day05_iFrame_JsAlert_Windows/C06_cokluPencereKullanimi.java
++IDEA additional info:
++Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
++<+>UTF-8
++===================================================================
++diff --git a/src/test/java/tests/day05_iFrame_JsAlert_Windows/C06_cokluPencereKullanimi.java b/src/test/java/tests/day05_iFrame_JsAlert_Windows/C06_cokluPencereKullanimi.java
++new file mode 100644
++--- /dev/null	
+++++ b/src/test/java/tests/day05_iFrame_JsAlert_Windows/C06_cokluPencereKullanimi.java	
++@@ -0,0 +1,60 @@
+++package tests.day05_iFrame_JsAlert_Windows;
+++
+++import org.junit.Assert;
+++import org.junit.Test;
+++import org.openqa.selenium.By;
+++import org.openqa.selenium.WindowType;
+++import tests.utilities.TestBase;
+++
+++public class C06_cokluPencereKullanimi  extends TestBase {
+++    @Test
+++    public void test01() throws InterruptedException {
+++        driver.get("https:amazon.com");
+++        String ilkSayfaWhd = driver.getWindowHandle();
+++        System.out.println(driver.getWindowHandle());//71C8F24C68E5E10F25D6300BC7D14567
+++        System.out.println(driver.getWindowHandles());//[71C8F24C68E5E10F25D6300BC7D14567]
+++
+++        // yeni bir tab acarak youtube gidelim
+++
+++        driver.switchTo().newWindow(WindowType.TAB);
+++        Thread.sleep(3000);
+++        driver.get("https:youtube.com");
+++String ikinciSayfaWhd = driver.getWindowHandle();
+++        System.out.println(driver.getWindowHandle());//F385CE231D827554A3B33D0FFD834684
+++        System.out.println(driver.getWindowHandles());//[2575ACA06120BBAB201C3B64A673729C, F385CE231D827554A3B33D0FFD834684]
+++        Thread.sleep(3000);
+++
+++
+++
+++        // yeni bir tab acarak arabam.com gidelim
+++        driver.switchTo().newWindow(WindowType.TAB).get("https:arabam.com");
+++        String ucuncuSayfaWhd = driver.getWindowHandle();
+++        System.out.println(driver.getWindowHandle());
+++        System.out.println(driver.getWindowHandles());//[C918224F943E2B6586DD0744F197CDB2, CEF84E51765E7C871050ACDDB160C852, 00D051A5B2C0530C99B48D42CFAC3E92]
+++        Thread.sleep(3000);
+++
+++
+++
+++
+++        //amazonun acik oldgugu sayfaya gidin
+++        //ve title'in amazon oldugunu test edin
+++        // an itibariyle driverimiz arabam.com oldugu sayfada
+++        //gecis icin amazon'un acik oldugu sayfanin window handle degerine ihtiyacimiz var
+++        driver.switchTo().window(ilkSayfaWhd);
+++        String expectedTitle = "Amazon";
+++        String actualTitle = driver.getTitle();
+++        Assert.assertTrue(actualTitle.contains(expectedTitle));
+++        //youtube'in  acşk oldugu sayfaya gidin
+++        // ve url'in youtube icerdigini test edin
+++        driver.switchTo().window(ikinciSayfaWhd);
+++        String expectedUrl = "youtube";
+++        String actualurl = driver.getCurrentUrl();
+++        Assert.assertTrue(actualurl.contains(expectedUrl));
+++        //arabam.com'un acik oldugu sayfaya gidin
+++        // ve logonun gorundugunu test edin
+++        driver.switchTo().window(ucuncuSayfaWhd);
+++        driver.findElement(By.xpath("//*[text()='Kabul Et']")).click();
+++        Assert.assertTrue(driver.findElement(By.xpath("//*[@alt='arabam.com']")).isDisplayed());
+++
+++    }
+++}
++Index: src/test/java/tests/day05_iFrame_JsAlert_Windows/C07_KontrolsuzCOkluPencere.java
++IDEA additional info:
++Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
++<+>UTF-8
++===================================================================
++diff --git a/src/test/java/tests/day05_iFrame_JsAlert_Windows/C07_KontrolsuzCOkluPencere.java b/src/test/java/tests/day05_iFrame_JsAlert_Windows/C07_KontrolsuzCOkluPencere.java
++new file mode 100644
++--- /dev/null	
+++++ b/src/test/java/tests/day05_iFrame_JsAlert_Windows/C07_KontrolsuzCOkluPencere.java	
++@@ -0,0 +1,53 @@
+++package tests.day05_iFrame_JsAlert_Windows;
+++
+++import org.junit.Assert;
+++import org.junit.Test;
+++import org.openqa.selenium.By;
+++import org.openqa.selenium.WebElement;
+++import tests.utilities.TestBase;
+++import java.util.Set;
+++public class C07_KontrolsuzCOkluPencere extends TestBase{
+++
+++// https://the-internet.herokuapp.com/windows adresine gidin.
+++//           ● Sayfadaki textin “Opening a new window” olduğunu doğrulayın.
+++//           ● Sayfa başlığının(title) “The Internet” olduğunu doğrulayın.
+++//           ● Click Here butonuna basın.
+++//           ● Acilan yeni pencerenin sayfa başlığının (title) “New Window” oldugunu dogrulayin.
+++//           ● Sayfadaki textin “New Window” olduğunu doğrulayın.
+++//           ● Bir önceki pencereye geri döndükten sonra sayfa başlığının “The Internet” olduğunu doğrulayın.
+++
+++    @Test
+++    public void test1(){
+++// https://the-internet.herokuapp.com/windows adresine gidin.
+++        driver.get("https://the-internet.herokuapp.com/windows");
+++        String ilkSayfaWhd = driver.getWindowHandle();
+++//           ● Sayfadaki textin “Opening a new window” olduğunu doğrulayın.
+++String expectedIcerik = "Opening a new window";
+++String actualIcerik = driver.findElement(By.tagName("h3")).getText();
+++        Assert.assertEquals(expectedIcerik,actualIcerik);
+++//           ● Sayfa başlığının(title) “The Internet” olduğunu doğrulayın.
+++        String expectedIcerik2 = "The Internet";
+++        String actualTitle2 = driver.getTitle();
+++        Assert.assertEquals(expectedIcerik2,actualTitle2);
+++//           ● Click Here butonuna basın.
+++
+++        driver.findElement(By.linkText("Click Here")).click();
+++        Set<String> Whds = driver.getWindowHandles();
+++        String ikinciSayfaWhd = "";
+++        for (String each:Whds
+++             ) {
+++            if(!ilkSayfaWhd.equals(each)) ikinciSayfaWhd = each;
+++        }
+++        driver.switchTo().window(ikinciSayfaWhd);
+++//           ● Acilan yeni pencerenin sayfa başlığının (title) “New Window” oldugunu dogrulayin.
+++String  yeniTitle = driver.getTitle();
+++String expectedNewTitle = "New Window";
+++Assert.assertEquals(yeniTitle,expectedNewTitle);
+++//           ● Sayfadaki textin “New Window” olduğunu doğrulayın.
+++ String newText = driver.findElement(By.tagName("h3")).getText();
+++   Assert.assertEquals(newText,expectedNewTitle);
+++//           ● Bir önceki pencereye geri döndükten sonra sayfa başlığının “The Internet” olduğunu doğrulayın.
+++driver.switchTo().window(ilkSayfaWhd);
+++        Assert.assertEquals(expectedIcerik2,actualTitle2);
+++    }
+++}
++Index: src/test/java/tests/day06_actionsClass_FileTestleri/C02_ActionsDemoQA.java
++IDEA additional info:
++Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
++<+>UTF-8
++===================================================================
++diff --git a/src/test/java/tests/day06_actionsClass_FileTestleri/C02_ActionsDemoQA.java b/src/test/java/tests/day06_actionsClass_FileTestleri/C02_ActionsDemoQA.java
++new file mode 100644
++--- /dev/null	
+++++ b/src/test/java/tests/day06_actionsClass_FileTestleri/C02_ActionsDemoQA.java	
++@@ -0,0 +1,27 @@
+++package tests.day06_actionsClass_FileTestleri;
+++
+++import org.junit.Assert;
+++import org.junit.Test;
+++import org.openqa.selenium.By;
+++import org.openqa.selenium.WebElement;
+++import org.openqa.selenium.interactions.Actions;
+++import tests.utilities.TestBase;
+++
+++import java.nio.file.WatchEvent;
+++
+++public class C02_ActionsDemoQA extends TestBase {
+++    @Test
+++    public void DragMeAndDropHere (){
+++      //  1- https://demoqa.com/droppable adresine gidelim
+++        driver.get("https://demoqa.com/droppable");
+++      //  2- “Drag me” butonunu tutup “Drop here” kutusunun ustune birakalim
+++        WebElement dragME = driver.findElement(By.xpath("//*[text()='Drag me']"));
+++        Actions actions = new Actions(driver);
+++        WebElement dropHere = driver.findElement(By.xpath("//*[text()='Drop here']"));
+++      actions.dragAndDrop(dragME,dropHere).perform();
+++      //  3- “Drop here” yazisi yerine “Dropped!” oldugunu test edin
+++        String expectedIcerik = "Dropped!";
+++        String actualIcerik = driver.findElement(By.xpath("//*[text()='Dropped!']")).getText();
+++        Assert.assertEquals(expectedIcerik,actualIcerik);
+++    }
+++}
++Index: src/test/java/tests/day06_actionsClass_FileTestleri/C01_actionClass.java
++IDEA additional info:
++Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
++<+>UTF-8
++===================================================================
++diff --git a/src/test/java/tests/day06_actionsClass_FileTestleri/C01_actionClass.java b/src/test/java/tests/day06_actionsClass_FileTestleri/C01_actionClass.java
++new file mode 100644
++--- /dev/null	
+++++ b/src/test/java/tests/day06_actionsClass_FileTestleri/C01_actionClass.java	
++@@ -0,0 +1,43 @@
+++package tests.day06_actionsClass_FileTestleri;
+++
+++import org.junit.Assert;
+++import org.junit.Test;
+++import org.openqa.selenium.By;
+++import org.openqa.selenium.WebElement;
+++import org.openqa.selenium.interactions.Actions;
+++import tests.utilities.TestBase;
+++
+++import javax.swing.*;
+++import java.util.Set;
+++
+++public class C01_actionClass extends TestBase {
+++    @Test
+++    public void test01() {
+++//    2- https://the-internet.herokuapp.com/context_menu sitesine gidin
+++        driver.get("https://the-internet.herokuapp.com/context_menu");
+++       String firstWHD = driver.getWindowHandle();
+++//            3- Cizili alan uzerinde sag click yapin
+++        Actions actions = new Actions(driver);
+++        WebElement basılacakKutu = driver.findElement(By.id("hot-spot"));
+++        actions.contextClick(basılacakKutu).perform();
+++//4- Alert’te cikan yazinin “You selected a context menu” oldugunu test edin.
+++        String expectedYazi = "You selected a context menu";
+++        String actualYazi = driver.switchTo().alert().getText();
+++        Assert.assertEquals(expectedYazi,actualYazi);
+++//5- Tamam diyerek alert’i kapatalim
+++        driver.switchTo().alert().accept();
+++//6- Elemental Selenium linkine tiklayalim
+++      driver.findElement(By.linkText("Elemental Selenium")).click();
+++        Set<String> WHDS = driver.getWindowHandles();
+++        String secondWHD = "";
+++        for (String each: WHDS
+++             ) {
+++            if(!firstWHD.equals(each)) secondWHD = each;
+++        }
+++        driver.switchTo().window(secondWHD);
+++//7- Acilan sayfada h1 taginda “Make sure your code lands” yazdigini test edelim
+++String expectedHeader = "Make sure your code lands";
+++String actualHeader = driver.findElement(By.className("home-header")).getText();
+++Assert.assertEquals(expectedHeader,actualHeader);
+++    }
+++}
++\ No newline at end of file
++Index: src/test/java/tests/utilities/TestBase.java
++IDEA additional info:
++Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
++<+>UTF-8
++===================================================================
++diff --git a/src/test/java/tests/utilities/TestBase.java b/src/test/java/tests/utilities/TestBase.java
++new file mode 100644
++--- /dev/null	
+++++ b/src/test/java/tests/utilities/TestBase.java	
++@@ -0,0 +1,25 @@
+++package tests.utilities;
+++
+++import io.github.bonigarcia.wdm.WebDriverManager;
+++import org.junit.After;
+++import org.junit.Before;
+++import org.openqa.selenium.WebDriver;
+++import org.openqa.selenium.chrome.ChromeDriver;
+++
+++import java.time.Duration;
+++
+++public class TestBase {
+++   public WebDriver driver;
+++    @Before
+++    public void setUp(){
+++        driver = new ChromeDriver();
+++        WebDriverManager.chromedriver().setup();
+++        driver.manage().window().maximize();
+++        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
+++    }
+++    @After
+++    public void tearDown() throws InterruptedException {
+++        Thread.sleep(3000);
+++       // driver.quit();
+++    }
+++}
++Index: src/test/java/tests/day06_actionsClass_FileTestleri/C04_keyboardActions.java
++IDEA additional info:
++Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
++<+>UTF-8
++===================================================================
++diff --git a/src/test/java/tests/day06_actionsClass_FileTestleri/C04_keyboardActions.java b/src/test/java/tests/day06_actionsClass_FileTestleri/C04_keyboardActions.java
++new file mode 100644
++--- /dev/null	
+++++ b/src/test/java/tests/day06_actionsClass_FileTestleri/C04_keyboardActions.java	
++@@ -0,0 +1,40 @@
+++package tests.day06_actionsClass_FileTestleri;
+++
+++import net.bytebuddy.implementation.bytecode.ShiftLeft;
+++import org.junit.Assert;
+++import org.junit.Test;
+++import org.openqa.selenium.By;
+++import org.openqa.selenium.Keys;
+++import org.openqa.selenium.WebElement;
+++import org.openqa.selenium.interactions.Actions;
+++import tests.utilities.TestBase;
+++
+++import java.time.format.DateTimeFormatter;
+++
+++public class C04_keyboardActions extends TestBase {
+++
+++    @Test
+++    public void tset01(){
+++        //1- Bir Class olusturalim KeyboardActions1
+++//2- https://www.amazon.com sayfasina gidelim
+++        driver.get("https://www.amazon.com");
+++//3- Arama kutusuna actions method’larini kullanarak Samsung A71 yazdirin ve Enter’a basarak arama yaptirin
+++        WebElement aramaKutusu = driver.findElement(By.id("twotabsearchtextbox"));
+++        Actions actions = new Actions(driver);
+++        actions.click(aramaKutusu)
+++                .keyDown(Keys.SHIFT)
+++                .sendKeys("s")
+++                .keyUp(Keys.SHIFT)
+++                .sendKeys("amsung ")
+++                .keyDown(Keys.SHIFT)
+++                .sendKeys("a")
+++                .keyUp(Keys.SHIFT)
+++                .sendKeys("71" + Keys.ENTER).perform();
+++//4- aramanin gerceklestigini test edin
+++        WebElement sonucElementi = driver.findElement(By.xpath("//div[@class='a-section a-spacing-small a-spacing-top-small']"));
+++        String expectedIcerik = "Samsung A71";
+++        String actualIcerik = sonucElementi.getText();
+++
+++        Assert.assertTrue(actualIcerik.contains(expectedIcerik));
+++    }
+++}
++Index: src/test/java/tests/day06_actionsClass_FileTestleri/C03_Actions.java
++IDEA additional info:
++Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
++<+>UTF-8
++===================================================================
++diff --git a/src/test/java/tests/day06_actionsClass_FileTestleri/C03_Actions.java b/src/test/java/tests/day06_actionsClass_FileTestleri/C03_Actions.java
++new file mode 100644
++--- /dev/null	
+++++ b/src/test/java/tests/day06_actionsClass_FileTestleri/C03_Actions.java	
++@@ -0,0 +1,28 @@
+++package tests.day06_actionsClass_FileTestleri;
+++
+++import org.junit.Assert;
+++import org.junit.Test;
+++import org.openqa.selenium.By;
+++import org.openqa.selenium.WebElement;
+++import org.openqa.selenium.devtools.v85.network.model.DataReceived;
+++import org.openqa.selenium.interactions.Actions;
+++import tests.utilities.TestBase;
+++
+++public class C03_Actions extends TestBase {
+++    @Test
+++    public void test01(){
+++       // 1- https://www.amazon.com/ adresine gidin
+++        driver.get("https://www.amazon.com/");
+++       // 2- Sag ust bolumde bulunan “Account & Lists” menusunun acilmasi icin mouse’u bu menunun ustune getirin
+++        Actions actions = new Actions(driver);
+++        WebElement accountsButton = driver.findElement(By.xpath("//*[text()='Account & Lists']"));
+++        actions.moveToElement(accountsButton).perform();
+++       // 3- “Create a list” butonuna basin
+++    driver.findElement(By.xpath("//*[text()='Create a List']")).click();
+++       // 4- Acilan sayfada “Your Lists” yazisi oldugunu test edin
+++        String expectedHeader = "Your Lists";
+++        String actualIcerik = driver.findElement(By.xpath("//*[text()='Your Lists']")).getText();
+++        Assert.assertEquals(expectedHeader,actualIcerik);
+++
+++    }
+++}
++Index: src/test/java/tests/day06_actionsClass_FileTestleri/C05_facebookKayitTesti.java
++IDEA additional info:
++Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
++<+>UTF-8
++===================================================================
++diff --git a/src/test/java/tests/day06_actionsClass_FileTestleri/C05_facebookKayitTesti.java b/src/test/java/tests/day06_actionsClass_FileTestleri/C05_facebookKayitTesti.java
++new file mode 100644
++--- /dev/null	
+++++ b/src/test/java/tests/day06_actionsClass_FileTestleri/C05_facebookKayitTesti.java	
++@@ -0,0 +1,52 @@
+++package tests.day06_actionsClass_FileTestleri;
+++
+++import com.github.javafaker.Faker;
+++import org.junit.AfterClass;
+++import org.junit.Test;
+++import org.openqa.selenium.By;
+++import org.openqa.selenium.Keys;
+++import org.openqa.selenium.WebElement;
+++import org.openqa.selenium.interactions.Actions;
+++import tests.utilities.TestBase;
+++
+++import java.security.Key;
+++
+++public class C05_facebookKayitTesti extends TestBase {
+++    @Test
+++    public void test01() throws InterruptedException {
+++       //1- https://www.facebook.com adresine gidelim
+++        driver.get("https://www.facebook.com");
+++       //2- Cookies kabul edin
+++       //3- Yeni hesap olustur butonuna basalim
+++        driver.findElement(By.xpath("//*[@*='open-registration-form-button']")).click();
+++       //4- Ad, soyad, mail ve sifre kutularina deger yazalim ve kaydol tusuna basalim
+++        WebElement adınKutusu = driver.findElement(By.xpath("//*[@placeholder='Adın']"));
+++        Actions actions = new Actions(driver);
+++        Faker faker = new Faker();
+++        String emailAdresi = faker.internet().emailAddress();
+++        actions.click(adınKutusu)
+++                .sendKeys(faker.name().firstName())
+++                .sendKeys(Keys.TAB)
+++                .sendKeys(faker.name().lastName())
+++                .sendKeys(Keys.TAB)
+++                .sendKeys(emailAdresi)
+++                .sendKeys(Keys.TAB)
+++                .sendKeys(emailAdresi)
+++                .sendKeys(Keys.TAB)
+++                .sendKeys(faker.internet().password())
+++                .sendKeys(Keys.TAB)
+++                .sendKeys(Keys.TAB)
+++                .sendKeys("23")
+++                .sendKeys(Keys.TAB)
+++                .sendKeys("haz")
+++                .sendKeys(Keys.TAB)
+++                .sendKeys("2000")
+++                .sendKeys(Keys.TAB).sendKeys(Keys.TAB).sendKeys(Keys.ARROW_RIGHT).perform();
+++        Thread.sleep(7000);
+++
+++        //5- Kaydol tusuna basalim
+++driver.findElement(By.xpath("//button[@name='websubmit']")).click();
+++
+++    }
+++
+++}
++Index: src/test/java/tests/Day04_JunitFrameWork_DropDown/C07_TestBaseKullanimiz.java
++IDEA additional info:
++Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
++<+>UTF-8
++===================================================================
++diff --git a/src/test/java/tests/Day04_JunitFrameWork_DropDown/C07_TestBaseKullanimiz.java b/src/test/java/tests/Day04_JunitFrameWork_DropDown/C07_TestBaseKullanimiz.java
++new file mode 100644
++--- /dev/null	
+++++ b/src/test/java/tests/Day04_JunitFrameWork_DropDown/C07_TestBaseKullanimiz.java	
++@@ -0,0 +1,38 @@
+++package tests.Day04_JunitFrameWork_DropDown;
+++
+++import org.junit.Assert;
+++import org.junit.Test;
+++import org.openqa.selenium.By;
+++import org.openqa.selenium.Keys;
+++import org.openqa.selenium.WebElement;
+++import tests.utilities.TestBase;
+++
+++public class C07_TestBaseKullanimiz  extends TestBase{
+++
+++    /*
+++
+++    extends keyword
+++    icinde oldugumu C07 class'ini
+++    TestBase class'inin child class'i yapar
+++bu sayede C07 class'indan TestBase class'indaki
+++tum variable ve method'lari DIREKT kullanabiliriz
+++(static keyword'e dikkat etmek gerekir)
+++     */
+++@Test
+++    public void amazonTest(){
+++
+++    // Amazon anasayfaya gidin
+++    driver.get("https:amazon.com");
+++
+++
+++    //Nutella icin arama yapin
+++    WebElement aramaKutusu = driver.findElement(By.id("twotabsearchtextbox"));
+++    aramaKutusu.sendKeys("nutella"+ Keys.ENTER);
+++
+++    //Arama sonuclarinin Nutlella icerdigini test edin
+++WebElement nutellaArmasonucu = driver.findElement(By.xpath("//*[@class='a-section a-spacing-small a-spacing-top-small']"));
+++String actualSonucYazisi = nutellaArmasonucu.getText();
+++String expectedIcerik = "nutella";
+++    Assert.assertTrue(actualSonucYazisi.contains(expectedIcerik));
+++}
+++}
++Index: src/test/java/tests/utilities/TestBaseClass.java
++IDEA additional info:
++Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
++<+>UTF-8
++===================================================================
++diff --git a/src/test/java/tests/utilities/TestBaseClass.java b/src/test/java/tests/utilities/TestBaseClass.java
++new file mode 100644
++--- /dev/null	
+++++ b/src/test/java/tests/utilities/TestBaseClass.java	
++@@ -0,0 +1,28 @@
+++package tests.utilities;
+++
+++import io.github.bonigarcia.wdm.WebDriverManager;
+++import org.junit.After;
+++import org.junit.AfterClass;
+++import org.junit.Before;
+++import org.junit.BeforeClass;
+++import org.openqa.selenium.WebDriver;
+++import org.openqa.selenium.chrome.ChromeDriver;
+++
+++import java.time.Duration;
+++
+++public class TestBaseClass {
+++    public static WebDriver driver;
+++    @BeforeClass
+++    public static void setUp(){
+++        driver = new ChromeDriver();
+++        WebDriverManager.chromedriver().setup();
+++        driver.manage().window().maximize();
+++        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
+++        driver.get("https://the-internet.herokuapp.com/javascript_alerts ");
+++    }
+++    @AfterClass
+++    public static void tearDown() throws InterruptedException {
+++        Thread.sleep(3000);
+++        driver.close();
+++    }
+++}
+Index: .idea/shelf/Uncommitted_changes_before_Checkout_at_9_10_2023_11_55__Changes_.xml
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Checkout_at_9_10_2023_11_55__Changes_.xml b/.idea/shelf/Uncommitted_changes_before_Checkout_at_9_10_2023_11_55__Changes_.xml
+new file mode 100644
+--- /dev/null	
++++ b/.idea/shelf/Uncommitted_changes_before_Checkout_at_9_10_2023_11_55__Changes_.xml	
+@@ -0,0 +1,4 @@
++<changelist name="Uncommitted_changes_before_Checkout_at_9_10_2023_11_55_[Changes]" date="1696841713439" recycled="false" toDelete="true">
++  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_9_10_2023_11_55_[Changes]/shelved.patch" />
++  <option name="DESCRIPTION" value="Uncommitted changes before Checkout at 9.10.2023 11:55 [Changes]" />
++</changelist>
+\ No newline at end of file
+Index: .idea/shelf/Uncommitted_changes_before_Update_at_9_10_2023_11_56__Changes_.xml
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Update_at_9_10_2023_11_56__Changes_.xml b/.idea/shelf/Uncommitted_changes_before_Update_at_9_10_2023_11_56__Changes_.xml
+new file mode 100644
+--- /dev/null	
++++ b/.idea/shelf/Uncommitted_changes_before_Update_at_9_10_2023_11_56__Changes_.xml	
+@@ -0,0 +1,4 @@
++<changelist name="Uncommitted_changes_before_Update_at_9_10_2023_11_56_[Changes]" date="1696841792301" recycled="true" deleted="true">
++  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_9_10_2023_11_56_[Changes]/shelved.patch" />
++  <option name="DESCRIPTION" value="Uncommitted changes before Update at 9.10.2023 11:56 [Changes]" />
++</changelist>
+\ No newline at end of file
+Index: .idea/shelf/Uncommitted_changes_before_Checkout_at_9_10_2023_11_55__Changes_1.xml
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Checkout_at_9_10_2023_11_55__Changes_1.xml b/.idea/shelf/Uncommitted_changes_before_Checkout_at_9_10_2023_11_55__Changes_1.xml
+new file mode 100644
+--- /dev/null	
++++ b/.idea/shelf/Uncommitted_changes_before_Checkout_at_9_10_2023_11_55__Changes_1.xml	
+@@ -0,0 +1,4 @@
++<changelist name="Uncommitted_changes_before_Checkout_at_9_10_2023_11_55_[Changes]1" date="1696841733578" recycled="true" deleted="true">
++  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_9_10_2023_11_55_[Changes]1/shelved.patch" />
++  <option name="DESCRIPTION" value="Uncommitted changes before Checkout at 9.10.2023 11:55 [Changes]" />
++</changelist>
+\ No newline at end of file
+Index: src/test/java/tests/day06_actionsClass_FileTestleri/C07_dosyaErisim.java
+===================================================================
+diff --git a/src/test/java/tests/day06_actionsClass_FileTestleri/C07_dosyaErisim.java b/src/test/java/tests/day06_actionsClass_FileTestleri/C07_dosyaErisim.java
+new file mode 100644
+--- /dev/null	
++++ b/src/test/java/tests/day06_actionsClass_FileTestleri/C07_dosyaErisim.java	
+@@ -0,0 +1,38 @@
++package tests.day06_actionsClass_FileTestleri;
++
++import com.sun.source.tree.SynchronizedTree;
++import org.junit.Test;
++
++public class C07_dosyaErisim {
++    @Test
++    public void dosyaTesti01(){
++        System.out.println(System.getProperty("user.home "));
++
++        /*
++        Selenium bilgisayarimiza ulasamaz  ve
++        bilgisayarimizdaki dosyalari test edemez
++
++        bilgisayarimizdaki dsyalarla ilgili islemler icin java'dan yardim alabiliriz
++
++        Javva'nin bilgisayarimizdaki bir dosyaya ulasabilmesi icin ise
++        dosya yoluna ihtiyaci vardir
++
++        Testimiz birden fazla bilgisayarda calisacaksa
++        her bilgisayarin dosya yapisi farkli olacağından
++        dosya testleri hata verebilir
++
++        bu hatlarin onuna gecmek icin
++        dosya yollarimizi dinamik yapmayi tercih ederiz
++
++        dosya yolunu 2 parcaya ayiralim
++        1- sadece benş bilgisayarima ozel kisim
++        2 - varsa onedrive kismi
++        3 - herkeste olan ortak kisim
++
++        /Users/enesoncu   Onedrive    /Masaüstü/sample.png
++
++         */
++
++        String  dinamikDosyaYolu = System.getProperty("user.home") + "OneDrive" + "/Masaüstü/sample.png";
++    }
++}
+Index: src/test/java/tests/day06_actionsClass_FileTestleri/C06_keyboardActions.java
+===================================================================
+diff --git a/src/test/java/tests/day06_actionsClass_FileTestleri/C06_keyboardActions.java b/src/test/java/tests/day06_actionsClass_FileTestleri/C06_keyboardActions.java
+new file mode 100644
+--- /dev/null	
++++ b/src/test/java/tests/day06_actionsClass_FileTestleri/C06_keyboardActions.java	
+@@ -0,0 +1,34 @@
++package tests.day06_actionsClass_FileTestleri;
++
++import org.junit.Assert;
++import org.junit.Test;
++import org.openqa.selenium.By;
++import org.openqa.selenium.Keys;
++import org.openqa.selenium.WebElement;
++import org.openqa.selenium.devtools.v85.network.model.DataReceived;
++import org.openqa.selenium.interactions.Actions;
++import tests.utilities.TestBase;
++
++public class C06_keyboardActions extends TestBase {
++
++    @Test
++    public void test01() throws InterruptedException {
++      // 2- https://html.com/tags/iframe/ sayfasina gidelim
++        driver.get("https://html.com/tags/iframe/");
++      // 3- video’yu gorecek kadar asagi inin
++        Thread.sleep(1000);
++        Actions actions = new Actions(driver);
++        actions.sendKeys(Keys.PAGE_DOWN).perform();
++        Thread.sleep(1000);
++      // 4- videoyu izlemek icin Play tusuna basin
++        WebElement iframeVideo = driver.findElement(By.xpath("//iframe[@src='https://www.youtube.com/embed/owsfdh4gxyc']"));
++        driver.switchTo().frame(iframeVideo);
++        Thread.sleep(1000);
++        driver.findElement(By.xpath("//button[@aria-label='Oynat']")).click();
++        // 5- videoyu calistirdiginizi test edinü
++        Thread.sleep(1000);
++        WebElement playButAfterPlay = driver.findElement(By.xpath("//*[@data-sessionlink='feature=player-button']"));
++        Assert.assertTrue(playButAfterPlay.isDisplayed());
++        Thread.sleep(1000);
++    }
++}
+Index: src/test/java/tests/day06_actionsClass_FileTestleri/C09_FileUploadTesti.java
+===================================================================
+diff --git a/src/test/java/tests/day06_actionsClass_FileTestleri/C09_FileUploadTesti.java b/src/test/java/tests/day06_actionsClass_FileTestleri/C09_FileUploadTesti.java
+new file mode 100644
+--- /dev/null	
++++ b/src/test/java/tests/day06_actionsClass_FileTestleri/C09_FileUploadTesti.java	
+@@ -0,0 +1,35 @@
++package tests.day06_actionsClass_FileTestleri;
++
++import org.junit.Test;
++import tests.utilities.TestBase;
++
++public class C09_FileUploadTesti extends TestBase{
++
++        @Test
++        public void fileUploadTEsti() throws InterruptedException {
++            //https://the-internet.herokuapp.com/upload adresine gidelim
++            driver.get("https://the-internet.herokuapp.com/upload ");
++            //chooseFile butonuna basalim
++            System.out.println(System.getProperty("user.home"));
++            //  //bilgisayardaki kullanici ana dosyanin dosya yolu : /Users/enesoncu
++            System.out.println(System.getProperty("user.dir"));
++            //Users/enesoncu/IdeaProjects/com.unityverse_Selenium
++            //Users/enesoncu/IdeaProjects/com.unityverse_Selenium/src/test/java/tests/deneme.txt ------> absolute path
++            // //tests/deneme.txt
++            String dinamikDosyaYolu = System.getProperty("user.dir")+"/src/test/java/tests/deneme.txt";
++            // //Yuklemek istediginiz dosyayi secelim.
++            //  WebElement fileUploadButonu = driver.findElement(By.id("file-upload"));
++            //  fileUploadButonu.sendKeys(dinamikDosyaYolu);
++            // //Upload butonuna basalim.
++            //  driver.findElement(By.id("file-submit")).click();
++            // //“File Uploaded!” textinin goruntulendigini test edelim.
++            //  WebElement fileUpload = driver.findElement(By.xpath("//*[text()='File Uploaded!']"));
++            //  Assert.assertTrue(fileUpload.isDisplayed());
++//
++            Thread.sleep(8000);
++        }
++    }
++
++
++
++
+Index: src/test/java/tests/day06_actionsClass_FileTestleri/C08_DosyaIndirmeTesti.java
+===================================================================
+diff --git a/src/test/java/tests/day06_actionsClass_FileTestleri/C08_DosyaIndirmeTesti.java b/src/test/java/tests/day06_actionsClass_FileTestleri/C08_DosyaIndirmeTesti.java
+new file mode 100644
+--- /dev/null	
++++ b/src/test/java/tests/day06_actionsClass_FileTestleri/C08_DosyaIndirmeTesti.java	
+@@ -0,0 +1,24 @@
++package tests.day06_actionsClass_FileTestleri;
++
++import org.junit.Assert;
++import org.junit.Test;
++import org.openqa.selenium.By;
++import tests.utilities.TestBase;
++
++import java.nio.file.Files;
++import java.nio.file.Paths;
++
++public class C08_DosyaIndirmeTesti extends TestBase {
++    @Test
++    public void dosyaIndirmeTesti() throws InterruptedException {
++        //2. https://the-internet.herokuapp.com/download adresine gidelim.
++        driver.get("https://the-internet.herokuapp.com/download ");
++        //3. sample.png dosyasını indirelim
++        Thread.sleep(2000);
++        driver.findElement(By.linkText("sample.png")).click();
++        //4. Dosyanın başarıyla indirilip indirilmediğini test edelim
++        String dinamikDosyaYolu = System.getProperty("user.home")+"/Desktop/sample.png";
++        System.out.println(dinamikDosyaYolu);
++        Assert.assertTrue(Files.exists(Paths.get(dinamikDosyaYolu)));
++    }
++}
+Index: src/test/java/tests/day08_Webtables/C01_Webtables.java
+===================================================================
+diff --git a/src/test/java/tests/day08_Webtables/C01_Webtables.java b/src/test/java/tests/day08_Webtables/C01_Webtables.java
+new file mode 100644
+--- /dev/null	
++++ b/src/test/java/tests/day08_Webtables/C01_Webtables.java	
+@@ -0,0 +1,39 @@
++package tests.day08_Webtables;
++
++import org.junit.Test;
++import org.openqa.selenium.By;
++import org.openqa.selenium.WebElement;
++import tests.utilities.TestBase;
++import java.util.List;
++public class C01_Webtables extends TestBase {
++    @Test
++    public void webtable(){
++      // 1. “https://demoqa.com/webtables” sayfasina gidin
++        driver.get("https://demoqa.com/webtables");
++      // 2. Headers da bulunan basliklari yazdirin
++        List<WebElement>  headersList = driver.findElements(By.xpath("//*[@class='rt-tr']//*[@role='columnheader']"));
++        int headersDataRow = 1;
++        for (int i = 0; i < headersList.size(); i++) {
++            System.out.println(headersDataRow+" - "+headersList.get(i).getText());
++            headersDataRow++;
++        }
++        System.out.println("=====");
++      // 3. 3.sutunun basligini yazdirin
++        String ucuncuSutunBasligi = driver.findElement(By.xpath("//*[@class='rt-tr']//*[@role='columnheader'][3]")).getText();
++        System.out.println("3.SUTUNUN basligi   :  "+ucuncuSutunBasligi);
++      // 4. Tablodaki tum datalari yazdirin
++        List<WebElement> wholeTbody = driver.findElements(By.xpath("//*[@class='rt-tbody']//*[@role='row']//*[@class='rt-td']"));
++        headersDataRow = 1;
++        for (int i = 0; i < wholeTbody.size(); i++) {
++            System.out.println(headersDataRow + " - " + wholeTbody.get(i).getText());
++            headersDataRow++;
++            if(wholeTbody.get(i).getText().isEmpty()) break;
++        }
++      // 5. Tabloda kac tane bos olmayan cell (data) oldugunu yazdirin
++      // 6. Tablodaki satir sayisini yazdirin
++      // 7. Tablodaki sutun sayisini yazdirin
++      // 8. Tablodaki 3.kolonu yazdirin
++      // 9. Tabloda "First Name" i Kierra olan kisinin Salary'sini yazdirin
++      // 10. Page sayfasinda bir method olusturun, Test sayfasindan satir ve sutun sayisini girdigimde bana datayi yazdirsin
++    }
++}
+Index: src/test/java/tests/deneme.txt
+===================================================================
+diff --git a/src/test/java/tests/deneme.txt b/src/test/java/tests/deneme.txt
+new file mode 100644
+--- /dev/null	
++++ b/src/test/java/tests/deneme.txt	
+@@ -0,0 +1,1 @@
++java candir, Selenium Heyecandir
+\ No newline at end of file

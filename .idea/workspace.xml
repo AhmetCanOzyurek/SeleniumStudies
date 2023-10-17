@@ -4,20 +4,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b77ea066-6ef9-4a06-a2f4-41ab9ed3a9ec" name="Changes" comment="JUnitStudies">
-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C01_Assertions.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C02_Assertions.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C03_Assertions.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C04_YoutubeAssertions.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C05_CheckBox.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C06_RadioButton.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C07_TestBaseKullanimiz.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/Day04_JunitFrameWork_DropDown/C08_DropDownMenu.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/day05_iFrame_JsAlert_Windows/C01_DropDownMenu.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/day05_iFrame_JsAlert_Windows/C02_DropDownMenuTestCase2.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/utilities/TestBase.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/tests/utilities/TestBaseClass.java" afterDir="false" />
+    <list default="true" id="b77ea066-6ef9-4a06-a2f4-41ab9ed3a9ec" name="Changes" comment="ScreenShots/TestBaseClassStudies">
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_10_2023_14_04_[Changes]/shelved.patch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_10_2023_14_04_[Changes]1/shelved.patch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_10_2023_14_04__Changes_.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_10_2023_14_04__Changes_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/shelved.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/shelved/shelved.patch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/shelved1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/shelved1/shelved.patch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shelved.patch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/tests/day08_Webtables_excellOtomasyonu_screenShot/C05_TumSayfaScreenShot.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/tests/day08_Webtables_excellOtomasyonu_screenShot/ulkeler.xlsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/tests/day09_ScreenShots_JSExecuter_TestNG/C01_tumSayfaFotografCek.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/tests/day09_ScreenShots_JSExecuter_TestNG/C02_WebelementScreenShots.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/tests/deneme.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/tests/utilities/ReusableMethods.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,84 +76,94 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Selenium&quot;
+    &quot;git-widget-placeholder&quot;: &quot;Selenium&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.maven.repository.indices&quot;
   }
 }</component>
-  <component name="RunManager" selected="JUnit.C02_DropDownMenuTestCase2.DDMTest">
-    <configuration name="C01_DropDownMenu" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/test/java/tests/day08_Webtables_excellOtomasyonu_screenShot" />
+      <recent name="$PROJECT_DIR$/src/test/java/tests" />
+    </key>
+  </component>
+  <component name="RunManager" selected="JUnit.C04_scroolIntoView.test0">
+    <configuration name="C01_tumSayfaFotografCek.test01" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="com.unityverse_Selenium" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="tests.day05_iFrame_JsAlert_Windows.*" />
+          <option name="PATTERN" value="tests.day09_ScreenShots_JSExecuter_TestNG.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="tests.day05_iFrame_JsAlert_Windows" />
-      <option name="MAIN_CLASS_NAME" value="tests.day05_iFrame_JsAlert_Windows.C01_DropDownMenu" />
+      <option name="PACKAGE_NAME" value="tests.day09_ScreenShots_JSExecuter_TestNG" />
+      <option name="MAIN_CLASS_NAME" value="tests.day09_ScreenShots_JSExecuter_TestNG.C01_tumSayfaFotografCek" />
+      <option name="METHOD_NAME" value="test01" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="C02_WebelementScreenShots.nutellaTesti" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="com.unityverse_Selenium" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="tests.day09_ScreenShots_JSExecuter_TestNG.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="tests.day09_ScreenShots_JSExecuter_TestNG" />
+      <option name="MAIN_CLASS_NAME" value="tests.day09_ScreenShots_JSExecuter_TestNG.C02_WebelementScreenShots" />
+      <option name="METHOD_NAME" value="nutellaTesti" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="C03_WebelementSS.test01" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="com.unityverse_Selenium" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="tests.day09_ScreenShots_JSExecuter_TestNG.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="tests.day09_ScreenShots_JSExecuter_TestNG" />
+      <option name="MAIN_CLASS_NAME" value="tests.day09_ScreenShots_JSExecuter_TestNG.C03_WebelementSS" />
+      <option name="METHOD_NAME" value="test01" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="C04_scroolIntoView" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="com.unityverse_Selenium" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="tests.day09_ScreenShots_JSExecuter_TestNG.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="tests.day09_ScreenShots_JSExecuter_TestNG" />
+      <option name="MAIN_CLASS_NAME" value="tests.day09_ScreenShots_JSExecuter_TestNG.C04_scroolIntoView" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="C01_DropDownMenu.DDMTest01" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="C04_scroolIntoView.test0" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="com.unityverse_Selenium" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="tests.day05_iFrame_JsAlert_Windows.*" />
+          <option name="PATTERN" value="tests.day09_ScreenShots_JSExecuter_TestNG.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="tests.day05_iFrame_JsAlert_Windows" />
-      <option name="MAIN_CLASS_NAME" value="tests.day05_iFrame_JsAlert_Windows.C01_DropDownMenu" />
-      <option name="METHOD_NAME" value="DDMTest01" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="C01_DropDownMenu.DDMTest02" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="com.unityverse_Selenium" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="tests.day05_iFrame_JsAlert_Windows.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="tests.day05_iFrame_JsAlert_Windows" />
-      <option name="MAIN_CLASS_NAME" value="tests.day05_iFrame_JsAlert_Windows.C01_DropDownMenu" />
-      <option name="METHOD_NAME" value="DDMTest02" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="C02_DropDownMenuTestCase2.DDMTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="com.unityverse_Selenium" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="tests.day05_iFrame_JsAlert_Windows.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="tests.day05_iFrame_JsAlert_Windows" />
-      <option name="MAIN_CLASS_NAME" value="tests.day05_iFrame_JsAlert_Windows.C02_DropDownMenuTestCase2" />
-      <option name="METHOD_NAME" value="DDMTest" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="C08_DropDownMenu.Test01" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="com.unityverse_Selenium" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="tests.Day04_JunitFrameWork_DropDown.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="tests.Day04_JunitFrameWork_DropDown" />
-      <option name="MAIN_CLASS_NAME" value="tests.Day04_JunitFrameWork_DropDown.C08_DropDownMenu" />
-      <option name="METHOD_NAME" value="Test01" />
+      <option name="PACKAGE_NAME" value="tests.day09_ScreenShots_JSExecuter_TestNG" />
+      <option name="MAIN_CLASS_NAME" value="tests.day09_ScreenShots_JSExecuter_TestNG.C04_scroolIntoView" />
+      <option name="METHOD_NAME" value="test0" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -157,11 +171,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.C02_DropDownMenuTestCase2.DDMTest" />
-        <item itemvalue="JUnit.C01_DropDownMenu" />
-        <item itemvalue="JUnit.C01_DropDownMenu.DDMTest02" />
-        <item itemvalue="JUnit.C08_DropDownMenu.Test01" />
-        <item itemvalue="JUnit.C01_DropDownMenu.DDMTest01" />
+        <item itemvalue="JUnit.C04_scroolIntoView.test0" />
+        <item itemvalue="JUnit.C04_scroolIntoView" />
+        <item itemvalue="JUnit.C03_WebelementSS.test01" />
+        <item itemvalue="JUnit.C02_WebelementScreenShots.nutellaTesti" />
+        <item itemvalue="JUnit.C01_tumSayfaFotografCek.test01" />
       </list>
     </recent_temporary>
   </component>
@@ -198,7 +212,63 @@
       <option name="project" value="LOCAL" />
       <updated>1696513533495</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="MultiTabStudies">
+      <option name="closed" value="true" />
+      <created>1696924740141</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1696924740141</updated>
+    </task>
+    <task id="LOCAL-00005" summary="ActionStudies">
+      <option name="closed" value="true" />
+      <created>1697040310739</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1697040310739</updated>
+    </task>
+    <task id="LOCAL-00006" summary="KeyboardActionStudies">
+      <option name="closed" value="true" />
+      <created>1697110517511</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1697110517511</updated>
+    </task>
+    <task id="LOCAL-00007" summary="fileUploadStudies">
+      <option name="closed" value="true" />
+      <created>1697210135093</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1697210135093</updated>
+    </task>
+    <task id="LOCAL-00008" summary="imp/explicitlyWaitsStudies">
+      <option name="closed" value="true" />
+      <created>1697314981305</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1697314981305</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Cookies/Webtables/ExcellStudies">
+      <option name="closed" value="true" />
+      <created>1697370808099</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1697370808099</updated>
+    </task>
+    <task id="LOCAL-00010" summary="ScreenShots/TestBaseClassStudies">
+      <option name="closed" value="true" />
+      <created>1697486600378</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1697486600378</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -231,6 +301,13 @@
     <MESSAGE value="DriverStuides and FirstTest" />
     <MESSAGE value="ManageMethodsStudies" />
     <MESSAGE value="JUnitStudies" />
-    <option name="LAST_COMMIT_MESSAGE" value="JUnitStudies" />
+    <MESSAGE value="MultiTabStudies" />
+    <MESSAGE value="ActionStudies" />
+    <MESSAGE value="KeyboardActionStudies" />
+    <MESSAGE value="fileUploadStudies" />
+    <MESSAGE value="imp/explicitlyWaitsStudies" />
+    <MESSAGE value="Cookies/Webtables/ExcellStudies" />
+    <MESSAGE value="ScreenShots/TestBaseClassStudies" />
+    <option name="LAST_COMMIT_MESSAGE" value="ScreenShots/TestBaseClassStudies" />
   </component>
 </project>
